@@ -1,0 +1,87 @@
+
+.wrap {
+    display: flex;
+    flex-direction: row;
+    height: 3.3rem;
+    justify-content: space-between;
+    padding-left: 5%;
+    padding-right: 5%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    position:relative;
+    border: 1px solid red;
+    border-top: 0.5px solid var(--gray);
+    border-bottom: 0.5px solid var(--gray);
+    align-items: center;
+    gap:1rem;
+}
+
+.logo{
+    width: 4rem;
+    height: 2.5rem;
+    object-fit: cover;
+}
+
+.wrap > :nth-child(2) {
+    flex:4;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .wrap > :nth-child(1) {
+    flex:1;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .wrap > :nth-child(3) {
+    flex:1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+
+.search{
+    display: flex;
+    align-items: center;
+    color: var(--gray);
+    background-color: var(--white);
+    height: 70%;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-left: 0.5rem;
+    padding-left: 1rem;
+    gap: 1rem;
+}
+.btn-div{
+    display: flex;
+    gap:1rem;
+}
+
+.btn-div> :nth-child(1){
+    cursor: pointer;
+    color: black;
+    background-color: transparent;
+    height:2rem;
+}
+
+.btn-div> :nth-child(2){
+    cursor: pointer;
+    background-color: black;
+    color:var(--white);
+    height:2rem;
+}
+
+.searchInput {
+    border: none;
+    background-color: var(--light-grey);
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.searchInput:focus {
+    outline: none;
+}
