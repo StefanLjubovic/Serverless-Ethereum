@@ -1,8 +1,8 @@
-import "./AllCourses.css"
+import "./StartedCourses.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 import Logo from '../../assets/code.jpg'
-function AllCourses(){
+function StartedCourses(){
 
     const list = [
         {
@@ -21,8 +21,8 @@ function AllCourses(){
     ];
 
     return(
-        <div className="courses-page">
-            <h2>What to learn next</h2>
+        <div className="started-page">
+            <h1>Pick up where you left off</h1>
             <div className="courses">
             {list.map((item, index) => (
                 <div className="course">
@@ -42,4 +42,4 @@ function AllCourses(){
     );
 }
 
-export default AllCourses
+export default StartedCourses

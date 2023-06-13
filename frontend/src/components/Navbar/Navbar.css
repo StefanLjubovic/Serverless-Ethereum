@@ -1,5 +1,5 @@
 
-.wrap {
+.navigation {
     display: flex;
     flex-direction: row;
     height: 3.3rem;
@@ -17,71 +17,71 @@
     gap:1rem;
 }
 
-.logo{
+.navigation .logo{
     width: 4rem;
     height: 2.5rem;
     object-fit: cover;
 }
 
-.wrap > :nth-child(2) {
+.navigation > :nth-child(2) {
     flex:4;
     height: 100%;
     display: flex;
     align-items: center;
   }
 
-  .wrap > :nth-child(1) {
+  .navigation > :nth-child(1) {
     flex:1;
     justify-content: center;
     align-items: center;
   }
 
-  .wrap > :nth-child(3) {
+  .navigation > :nth-child(3) {
     flex:1;
     display: flex;
     justify-content: flex-end;
   }
 
 
-.search{
+  .navigation .search{
     display: flex;
     align-items: center;
     color: var(--gray);
     background-color: var(--white);
     height: 70%;
     width: 100%;
-    border-radius: 10px;
+    border-radius: 15px;
     border: 1px solid black;
     margin-left: 0.5rem;
     padding-left: 1rem;
     gap: 1rem;
 }
-.btn-div{
+.navigation .btn-div{
     display: flex;
     gap:1rem;
 }
 
-.btn-div> :nth-child(1){
+.navigation .btn-div> :nth-child(1){
     cursor: pointer;
     color: black;
     background-color: transparent;
     height:2rem;
 }
 
-.btn-div> :nth-child(2){
+.navigation .btn-div> :nth-child(2){
     cursor: pointer;
     background-color: black;
     color:var(--white);
     height:2rem;
 }
 
-.searchInput {
+.navigation .searchInput {
     border: none;
     background-color: var(--light-grey);
     width: 100%;
     font-size: 0.9rem;
 }
 
-.searchInput:focus {
+.navigation .searchInput:focus {
     outline: none;
 }

@@ -1,0 +1,40 @@
+
+ .coursee {
+    position: relative;
+    width: 100vw;
+    height: 90vh;
+    padding-left: 22%;
+    padding-right:70%;
+    display: flex;
+    flex-direction: row;
+  }
+  
+   .coursee .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  
+   .coursee .background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 33%;
+    background-color: var(--black);
+  }
+  
+ .coursee .background::after {
+    content: "";
+    position: absolute;
+    top:33%;
+    left: 0%;
+    width: 100%;
+    height: 66%;
+    background-color: white;
+  }
+  

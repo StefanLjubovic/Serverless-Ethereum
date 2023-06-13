@@ -14,7 +14,11 @@ code {
 }
 
 :root {
-  --gray: #afb0b0;
+  --gray: #a1a2a2;
   --purple: #cec0fc;
   --white: #ffffff;
+  --black: #1c1d1f;
+  --pink: #a435f0;
+  --pink-dark: #8710d8;
+  --light-gray: #f7f9fa;
 }

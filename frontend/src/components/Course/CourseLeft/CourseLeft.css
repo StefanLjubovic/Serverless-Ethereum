@@ -1,0 +1,34 @@
+
+.left{
+    margin-top: 1rem;
+    min-width: 25rem;
+    max-width: 35rem;
+    height: 70vh;
+}
+
+.left .title{
+    display: flex;
+    flex-wrap: wrap;
+    color: white;
+    text-align: left;
+    max-width:80%;
+}
+
+.left .description{
+    display: flex;
+    flex-wrap: wrap;
+    color: white;
+    text-align: left;
+    max-width:80%;
+    margin-top: -1rem;
+    font-size: 0.9rem;
+}
+
+.left .rating{
+    display: flex;
+    flex-wrap: wrap;
+    color: white;
+    text-align: left;
+    max-width:80%;
+    margin-top: 1rem;
+}

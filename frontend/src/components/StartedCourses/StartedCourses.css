@@ -1,5 +1,5 @@
 
-.courses-page{
+.started-page{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -8,7 +8,7 @@
     width: 100%;
 }
 
-.courses-page .courses{
+.started-page .courses{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -18,7 +18,7 @@
 
 }
 
-.courses-page .course{
+.started-page .course{
     width: 25%;
     border: 1px solid var(--gray);
     height: 7rem;
@@ -28,19 +28,19 @@
     position: relative;
 }
 
-.courses-page .course:hover {
+.started-page .course:hover {
     box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.1);
   }
 
-  .courses-page  .course-img{
+  .started-page  .course-img{
     width: 8rem;
     height: 7rem;
     position: relative;
   }
 
-  .courses-page .icon{
+  .started-page .icon{
     position: absolute;
     color: white;
     z-index: 50;
@@ -50,14 +50,14 @@
     height: 2.5rem;
   }
 
-  .courses-page .course > :nth-child(2){
+  .started-page .course > :nth-child(2){
     width: 60%;
     padding-left: 0.5rem;
     margin-top: 0;
     padding-top: 0.2rem;
   }
 
-  .courses-page .title{
+  .started-page .title{
     color: var(--gray);
     font-size: 0.7rem;
     overflow: hidden;
@@ -67,7 +67,7 @@
   margin: 0;
   }
 
-  .courses-page .description {
+  .started-page .description {
     text-align: left;
     margin: 0;
     margin-top: 0.3rem;
@@ -75,7 +75,7 @@
   }
 
 
-  .courses-page .duration{
+  .started-page .duration{
     display: flex;
     align-items: flex-end;
     height: 30%;
@@ -84,13 +84,13 @@
   }
 
   @media (max-width: 768px) {
-    .courses-page .course {
+    .started-page .course {
       width: 50%; /* Adjust the width for smaller screens */
     }
   }
   
   @media (max-width: 576px) {
-    .courses-page .course {
+    .started-page .course {
       width: 100%; /* Adjust the width for even smaller screens */
     }
   }

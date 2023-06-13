@@ -1,10 +1,10 @@
-import classes from './Navbar.css'
+import './Navbar.css'
 import Logo from '../../assets/logo-color.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 function Navbar() {
     return (
-        <div className="wrap">
+        <div className="navigation">
             <div>
                  <img src={Logo} className="logo" alt="Logo" />
             </div>
