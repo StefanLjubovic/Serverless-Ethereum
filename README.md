@@ -1,1 +1,1 @@
-# Serverless-Etheryum
+# Serverless Ethereum
