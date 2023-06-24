@@ -8,15 +8,15 @@ import (
 	"github.com/aws/jsii-runtime-go"
 )
 
-func defineS3Bucket(stack awscdk.Stack) {
+func defineS3Bucket(stack *awscdk.Stack) {
 
-	bucket := awss3.NewBucket(stack, jsii.String("WebsiteBucket"), &awss3.BucketProps{
+	bucket := awss3.NewBucket(*stack, jsii.String("WebsiteBucket"), &awss3.BucketProps{
 		WebsiteIndexDocument: jsii.String("index.html"),
 		PublicReadAccess:     jsii.Bool(true),
 	})
 
 	assetPath := "../../frontend/build" // Replace with the path to the directory containing your website files
-	awss3deployment.NewBucketDeployment(stack, jsii.String("WebsiteDeployment"), &awss3deployment.BucketDeploymentProps{
+	awss3deployment.NewBucketDeployment(*stack, jsii.String("WebsiteDeployment"), &awss3deployment.BucketDeploymentProps{
 		Sources: &[]awss3deployment.ISource{
 			awss3deployment.Source_Asset(jsii.String(assetPath), nil),
 		},
