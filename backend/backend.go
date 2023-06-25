@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 
 	// "github.com/aws/aws-cdk-go/awscdk/v2/awssqs"
+	"github.com/StefanLjubovic/Serverless-Ethereum/backend/services"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 )
@@ -20,6 +21,8 @@ func NewBackendStack(scope constructs.Construct, id string, props *BackendStackP
 		sprops = props.StackProps
 	}
 	stack := awscdk.NewStack(scope, &id, &sprops)
+
+	services.DefineS3Bucket(&stack)
 
 	// The code that defines your stack goes here
 
