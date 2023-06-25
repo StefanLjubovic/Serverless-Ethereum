@@ -9,19 +9,7 @@ require (
 )
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.18.1 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.28 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.26 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.14.3 // indirect
-	github.com/aws/smithy-go v1.13.5 // indirect
-)
-
-require (
 	github.com/Masterminds/semver/v3 v3.2.1 // indirect
-	github.com/aws/aws-cdk-go/awscdk v1.204.0-devpreview
-	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.29
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.35.0
-	github.com/aws/constructs-go/constructs/v3 v3.4.333
 	github.com/cdklabs/awscdk-asset-awscli-go/awscliv1/v2 v2.2.177 // indirect
 	github.com/cdklabs/awscdk-asset-kubectl-go/kubectlv20/v2 v2.1.1 // indirect
 	github.com/cdklabs/awscdk-asset-node-proxy-agent-go/nodeproxyagentv5/v2 v2.0.148 // indirect
