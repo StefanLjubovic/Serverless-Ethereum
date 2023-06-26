@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"log"
@@ -9,10 +8,9 @@ import (
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awscloudfront"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awscloudfrontorigins"
-	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awss3deployment"
 
-	// "github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awss3"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
@@ -27,16 +25,21 @@ func DefineS3Bucket(stack *awscdk.Stack) {
 
 	bucket := awss3.NewBucket(*stack, jsii.String("Serverless-Ethereum-frontend"), &awss3.BucketProps{
 		WebsiteIndexDocument: jsii.String("index.html"),
-		// PublicReadAccess:     jsii.Bool(true),
+		BlockPublicAccess: awss3.NewBlockPublicAccess(&awss3.BlockPublicAccessOptions{
+			BlockPublicAcls:       jsii.Bool(false),
+			BlockPublicPolicy:     jsii.Bool(false),
+			IgnorePublicAcls:      jsii.Bool(false),
+			RestrictPublicBuckets: jsii.Bool(false),
+		}),
 	})
 
-	assetPath := "../frontend/build" // Replace with the path to the directory containing your website files
+	assetPath := "../frontend/build"
 	awss3deployment.NewBucketDeployment(*stack, jsii.String("WebsiteDeployment"), &awss3deployment.BucketDeploymentProps{
 		Sources: &[]awss3deployment.ISource{
 			awss3deployment.Source_Asset(jsii.String(assetPath), nil),
 		},
 		DestinationBucket:    bucket,
-		DestinationKeyPrefix: jsii.String("web/static"),
+		DestinationKeyPrefix: jsii.String("/"),
 	})
 	origin := awscloudfrontorigins.NewS3Origin(bucket, &awscloudfrontorigins.S3OriginProps{
 		OriginPath: jsii.String("/"),
@@ -48,10 +51,6 @@ func DefineS3Bucket(stack *awscdk.Stack) {
 		},
 	})
 
-	distributionID := distribution.DistributionId()
-	region := os.Getenv("CDK_DEPLOY_REGION")
-	distributionARN := fmt.Sprintf("arn:aws:cloudfront:%s:distribution/%s", region, distributionID)
-
 	bucketARN := *bucket.BucketArn() + "/*"
 
 	bucket.AddToResourcePolicy(
@@ -62,7 +61,7 @@ func DefineS3Bucket(stack *awscdk.Stack) {
 			),
 			Effect: awsiam.Effect_ALLOW,
 			Principals: &[]awsiam.IPrincipal{
-				awsiam.NewArnPrincipal(jsii.String(distributionARN)),
+				awsiam.NewAnyPrincipal(),
 			},
 		}),
 	)
