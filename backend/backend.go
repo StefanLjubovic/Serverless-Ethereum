@@ -1,17 +1,100 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/aws/aws-cdk-go/awscdk/v2"
+	"log"
 
-	// "github.com/aws/aws-cdk-go/awscdk/v2/awssqs"
+	"github.com/aws/aws-cdk-go/awscdk/v2"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awscloudfront"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awscloudfrontorigins"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awss3deployment"
+
+	// "github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awss3"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
+	"github.com/joho/godotenv"
 )
 
 type BackendStackProps struct {
 	awscdk.StackProps
+}
+
+func DefineS3Bucket(stack *awscdk.Stack) {
+
+	bucket := awss3.NewBucket(*stack, jsii.String("Serverless-Ethereum-frontend"), &awss3.BucketProps{
+		WebsiteIndexDocument: jsii.String("index.html"),
+		// PublicReadAccess:     jsii.Bool(true),
+	})
+
+	assetPath := "../frontend/build" // Replace with the path to the directory containing your website files
+	awss3deployment.NewBucketDeployment(*stack, jsii.String("WebsiteDeployment"), &awss3deployment.BucketDeploymentProps{
+		Sources: &[]awss3deployment.ISource{
+			awss3deployment.Source_Asset(jsii.String(assetPath), nil),
+		},
+		DestinationBucket:    bucket,
+		DestinationKeyPrefix: jsii.String("web/static"),
+	})
+	origin := awscloudfrontorigins.NewS3Origin(bucket, &awscloudfrontorigins.S3OriginProps{
+		OriginPath: jsii.String("/"),
+	})
+
+	distribution := awscloudfront.NewDistribution(*stack, jsii.String("myDist"), &awscloudfront.DistributionProps{
+		DefaultBehavior: &awscloudfront.BehaviorOptions{
+			Origin: origin,
+		},
+	})
+
+	distributionID := distribution.DistributionId()
+	region := os.Getenv("CDK_DEPLOY_REGION")
+	distributionARN := fmt.Sprintf("arn:aws:cloudfront:%s:distribution/%s", region, distributionID)
+
+	bucketARN := *bucket.BucketArn() + "/*"
+
+	bucket.AddToResourcePolicy(
+		awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+			Actions: jsii.Strings("s3:GetObject"),
+			Resources: jsii.Strings(
+				bucketARN,
+			),
+			Effect: awsiam.Effect_ALLOW,
+			Principals: &[]awsiam.IPrincipal{
+				awsiam.NewArnPrincipal(jsii.String(distributionARN)),
+			},
+		}),
+	)
+
+	// Output the CloudFront domain name
+	awscdk.NewCfnOutput(*stack, jsii.String("DistributionDomainName"), &awscdk.CfnOutputProps{
+		Value: distribution.DistributionDomainName(),
+	})
+
+	// api := awsapigateway.NewRestApi(stack, jsii.String("WebsiteApi"))
+	// domainName := "<your_custom_domain_name>" // Replace with your custom domain name
+	// domain := awsapigateway.NewDomainName(stack, jsii.String("WebsiteDomain"), &awsapigateway.DomainNameProps{
+	// 	DomainName: jsii.String(domainName),
+	// 	Certificate: awsapigateway.NewCertificate(stack, jsii.String("WebsiteCertificate"), &awsapigateway.CertificateProps{
+	// 		DomainName:       jsii.String(domainName),
+	// 		ValidationMethod: awsapigateway.ValidationMethod_DNS,
+	// 	}),
+	// })
+	// api.DomainName().AddBasePathMapping(api.Root(), &awsapigateway.BasePathMappingOptions{
+	// 	DomainName: domain,
+	// })
+
+	// // Create a Route53 hosted zone and map it to the custom domain
+	// zone := awsroute53.NewHostedZone(stack, jsii.String("WebsiteHostedZone"), &awsroute53.HostedZoneProps{
+	// 	ZoneName: jsii.String("<your_domain_name>"), // Replace with your domain name
+	// })
+	// awsroute53.NewARecord(stack, jsii.String("WebsiteARecord"), &awsroute53.ARecordProps{
+	// 	Zone:       zone,
+	// 	RecordName: jsii.String("<your_domain_name>"), // Replace with your domain name
+	// 	Target:     awsroute53.RecordTarget_FromAlias(awsroute53targets.NewApiGateway(api)),
+	// })
+
 }
 
 func NewBackendStack(scope constructs.Construct, id string, props *BackendStackProps) awscdk.Stack {
@@ -21,14 +104,7 @@ func NewBackendStack(scope constructs.Construct, id string, props *BackendStackP
 	}
 	stack := awscdk.NewStack(scope, &id, &sprops)
 
-	// services.DefineS3Bucket(&stack)
-
-	// The code that defines your stack goes here
-
-	// example resource
-	// queue := awssqs.NewQueue(stack, jsii.String("BackendQueue"), &awssqs.QueueProps{
-	// 	VisibilityTimeout: awscdk.Duration_Seconds(jsii.Number(300)),
-	// })
+	DefineS3Bucket(&stack)
 
 	return stack
 }
@@ -47,9 +123,13 @@ func main() {
 	app.Synth(nil)
 }
 
-// env determines the AWS environment (account+region) in which our stack is to
-// be deployed. For more information see: https://docs.aws.amazon.com/cdk/latest/guide/environments.html
 func env() *awscdk.Environment {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file:", err)
+	}
+
 	account := os.Getenv("CDK_DEPLOY_ACCOUNT")
 	region := os.Getenv("CDK_DEPLOY_REGION")
 	return &awscdk.Environment{

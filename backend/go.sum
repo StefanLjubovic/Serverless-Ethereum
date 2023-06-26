@@ -1,9 +1,13 @@
 github.com/Masterminds/semver/v3 v3.2.1 h1:RN9w6+7QoMeJVGyfmbcgs28Br8cvmnucEXnY0rYXWg0=
 github.com/Masterminds/semver/v3 v3.2.1/go.mod h1:qvl/7zhW3nngYb5+80sSMF+FG2BjYrf8m9wsX0PNOMQ=
+github.com/aws/aws-cdk-go/awscdk v1.204.0-devpreview h1:t3TI4mtmRQlUF5OceL3zhhTlz1RtFMMbsWQ1oMrAsWg=
+github.com/aws/aws-cdk-go/awscdk v1.204.0-devpreview/go.mod h1:ZAyiU+hVHfDS6Vvxf1ljmwawmA5Ri6FUay6M04+93pk=
 github.com/aws/aws-cdk-go/awscdk/v2 v2.83.1 h1:Z9apVKNwpi0nhXyOi7FXNMK2cUKNtnCm+jdbzQWGPgI=
 github.com/aws/aws-cdk-go/awscdk/v2 v2.83.1/go.mod h1:Jyy27U909IuC6bKytIkrHSt0/Hlp3Aq2uVx8L9H3UKg=
 github.com/aws/constructs-go/constructs/v10 v10.2.26 h1:mAZE2LDalT/1ySrQZEl54hzghsySWosLxWYo+5b+/3U=
 github.com/aws/constructs-go/constructs/v10 v10.2.26/go.mod h1:auRY1XPWnLxvn5fR3sZ9SsYOxH/BCQC697s4Yw8B7tk=
+github.com/aws/constructs-go/constructs/v3 v3.4.232 h1:YLw1wSu8/qqmacsZWPXI+qFNu4ml2YZwtRZHL2gaB8M=
+github.com/aws/constructs-go/constructs/v3 v3.4.232/go.mod h1:ejR5Hd2llgfqo68taM7H/hnri4hrHObbsqbT6YySLMI=
 github.com/aws/jsii-runtime-go v1.84.0 h1:ZvOKkGKQBZC8qrlM3qi2hXnbnqI64o3WtVw5ZVd/q9s=
 github.com/aws/jsii-runtime-go v1.84.0/go.mod h1:sZ4/oNiaZBQFkzGWZYvqo/85M0EitkFa8SEEEMECt4w=
 github.com/cdklabs/awscdk-asset-awscli-go/awscliv1/v2 v2.2.177 h1:NwrkIwocyYMzEb+FUnkmAR92ZbPdDFx6H3YkzGThJIE=
@@ -13,6 +17,8 @@ github.com/cdklabs/awscdk-asset-kubectl-go/kubectlv20/v2 v2.1.1/go.mod h1:CvFHBo
 github.com/cdklabs/awscdk-asset-node-proxy-agent-go/nodeproxyagentv5/v2 v2.0.148 h1:EYJf4AJZu3dfRi1kUGL/KYpB8oGM7YiAO5gduSk6428=
 github.com/cdklabs/awscdk-asset-node-proxy-agent-go/nodeproxyagentv5/v2 v2.0.148/go.mod h1:ijFFZkl36TAyu4+h1Abbo8aKUpIzKaDEfXr+LjbaGOA=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/mattn/go-isatty v0.0.19 h1:JITubQf0MOLdlGRuRq+jtsDlekdYPia9ZFsB8h/APPA=
 github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
