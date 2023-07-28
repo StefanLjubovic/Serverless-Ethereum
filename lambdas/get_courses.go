@@ -1,20 +1,20 @@
 package lambdas
 
 import (
+	"backend/service"
+
+	// services "../../service"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 	"log"
 	"net/http"
 	"os"
-
-	services "../../service"
-
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
 )
 
-var courseService services.CoursesService
+var courseService service.CoursesService
 
 func init() {
 	fmt.Printf("Init")
