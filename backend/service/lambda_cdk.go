@@ -2,13 +2,17 @@ package service
 
 import (
 	"encoding/json"
-
+	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsdynamodb"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
+	"github.com/aws/aws-cdk-go/awscdkapigatewayv2alpha/v2"
+	"github.com/aws/aws-cdk-go/awscdkapigatewayv2integrationsalpha/v2"
+	"github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2"
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/jsii-runtime-go"
 )
 
-const getCoursesDir = "../service/lambdas"
+const getCoursesDir = "../lambdas"
 
 func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTable awsdynamodb.Table) {
 
