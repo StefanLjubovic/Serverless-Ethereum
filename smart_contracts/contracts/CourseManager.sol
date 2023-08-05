@@ -9,7 +9,7 @@ contract CourseManager {
     constructor(){}
 
     function deployCourse(uint courseId, uint coursePrice) public {
-        address newCourse = address(new Course(msg.sender, courseId, coursePrice));
+        address newCourse = address(new Course(msg.sender,coursePrice, courseId));
         courses[msg.sender][courseId] = newCourse;
     }
 

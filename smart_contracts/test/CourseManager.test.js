@@ -61,11 +61,7 @@ it("Buy course", async () => {
     // Get the course address
     const courseAddress = await courseManagerInstance.getCourse(owner, courseId);
     const courseInstance = await Course.at(courseAddress);
-  
-    const fetchedCoursePriceInWei = await courseInstance.getCoursePriceInWei();
-    console.log("Course price in Wei: " + fetchedCoursePriceInWei.toString());
-  
-    // Attempt to send a transaction with insufficient funds
+
     try {
       const transactionValue = coursePriceInWei;
       await web3.eth.sendTransaction({
@@ -75,14 +71,10 @@ it("Buy course", async () => {
       });
   
       const balanceAfter = await web3.eth.getBalance(accounts[1]);
-      const difference = balanceBefore.sub(balanceAfter);
   
-      console.log("Balance after:", balanceAfter.toString());
-      console.log("Balance before:", balanceBefore.toString());
-      console.log("Difference:", difference.toString());
-  
+      assert.equal(balanceAfter,new BigNumber("98999819780473549440"),"Users balance after purchasing course")
+
       const isPurchased = await courseInstance.checkIfUserPurchased(accounts[1]);
-      console.log("Is purchased:", isPurchased);
       assert.equal(isPurchased, true, "User should have purchased the course");
     } catch (error) {
       console.log(error);

@@ -45,6 +45,10 @@
 // const { MNEMONIC, PROJECT_ID } = process.env;
 
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
+const fs = require('fs');
+const mnemonic = fs.readFileSync(".secret").toString().trim();
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const providerUrl = 'https://rpc-mainnet.matic.network'; // Mainnet
 
 module.exports = {
   /**
@@ -69,7 +73,22 @@ module.exports = {
       host: "127.0.0.1",
       port: 8545,
       network_id: "*",
-    }
+    },
+    matic: {
+      provider: () => new HDWalletProvider(mnemonic, providerUrl),
+      network_id: 137, // Polygon mainnet network ID
+      gasPrice: 1000000000, // Customize gas price if needed
+      confirmations: 2, // Number of block confirmations needed
+      timeoutBlocks: 200, // Timeout in blocks
+      skipDryRun: true, // Skip dry run before migrations?
+    },
+    // gouerli: {
+    //   // provider: () => new HDWalletProvider(mnemonic)
+    //   network_id: 5,
+    //   confirmations: 2,
+    //   timeoutBlocks: 200,
+    //   skipDryRun: true
+    // },
 
     // development: {
     //  host: "127.0.0.1",     // Localhost (default: none)
@@ -123,6 +142,11 @@ module.exports = {
       //  evmVersion: "byzantium"
       // }
     }
+  },
+
+  plugins: ['truffle-plugin-verify'],
+  api_keys: {
+    etherscan: fs.readFileSync(".etherscan").toString().trim()
   },
 
   // Truffle DB is currently disabled by default; to enable it, change enabled:
