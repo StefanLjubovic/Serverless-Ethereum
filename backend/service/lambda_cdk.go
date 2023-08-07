@@ -42,4 +42,20 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
 		Integration: coursesFunctionIntg})
 
+	// GET COURSE BY ID
+	coursesFunction2 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("get_course_by_id"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Environment: &map[string]*string{"COURSES_SERVICE": aws.String(string(serviceJSON))},
+			Entry:       jsii.String("../lambdas/get_course_by_id")})
+
+	coursesTable.GrantReadData(coursesFunction2)
+
+	coursesFunctionIntg2 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(jsii.String("courses-function-integration"), coursesFunction2, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/courses/id"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
+		Integration: coursesFunctionIntg2})
+
 }
