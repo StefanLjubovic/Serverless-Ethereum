@@ -12,7 +12,7 @@ import (
 	"github.com/aws/jsii-runtime-go"
 )
 
-const getCoursesDir = "../lambdas"
+const getCoursesDir = "../lambdas/get_all_courses"
 
 func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTable awsdynamodb.Table) {
 

@@ -31,9 +31,6 @@ require (
 
 require (
 	github.com/aws/aws-cdk-go/awscdk/v2 v2.85.0
-	github.com/aws/aws-cdk-go/awscdkapigatewayv2alpha/v2 v2.85.0-alpha.0
-	github.com/aws/aws-cdk-go/awscdkapigatewayv2integrationsalpha/v2 v2.85.0-alpha.0
-	github.com/aws/aws-cdk-go/awscdklambdagoalpha/v2 v2.85.0-alpha.0
 	github.com/aws/aws-sdk-go-v2 v1.19.0
 	github.com/aws/aws-sdk-go-v2/config v1.18.29
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.10.32
