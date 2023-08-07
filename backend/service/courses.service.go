@@ -61,3 +61,7 @@ func (coursesService *CoursesService) GetAllCourses() (*[]model.Course, error) {
 	}
 	return &courses, nil
 }
+
+func (coursesService *CoursesService) GetCourseById(id int) (*model.Course, error) {
+	return nil, nil
+}

@@ -2,8 +2,6 @@ package main
 
 import (
 	"backend/service"
-	"os"
-
 	"context"
 	"encoding/json"
 	"fmt"
@@ -11,15 +9,16 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"log"
 	"net/http"
+	"os"
 )
 
 var courseService service.CoursesService
 
 func init() {
-	fmt.Printf("Init")
+	fmt.Println("Init")
 	serviceString := os.Getenv("COURSES_SERVICE")
 	if serviceString == "" {
-		log.Fatal("missing environment variable COURSES_SERVICE")
+		log.Fatal("Missing environment variable COURSES_SERVICE")
 		return
 	}
 	err := json.Unmarshal([]byte(serviceString), &courseService)
@@ -29,30 +28,33 @@ func init() {
 	}
 }
 
-func main() {
-	lambda.Start(handler)
-}
-
 func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-
-	courses, err := courseService.GetAllCourses()
-	fmt.Println(courses)
+	course, err := courseService.GetCourseById(1)
+	fmt.Println(course)
 	if err != nil {
-		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: http.StatusNotFound,
+		}, nil
 	}
 
-	responseBody, err := json.Marshal(courses)
-	fmt.Println(responseBody)
-	if err != nil {
-		log.Printf("failed to marshal courses: %v", err)
-		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil
-	}
+	//responseBody, err := json.Marshal(course)
+	//fmt.Println(responseBody)
+	//if err != nil {
+	//	log.Printf("Failed to marshal course: %v", err)
+	//	return events.APIGatewayV2HTTPResponse{
+	//		StatusCode: http.StatusInternalServerError,
+	//	}, nil
+	//}
 
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusOK,
-		Body:       string(responseBody),
+		Body:       string("Hello"),
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},
 	}, nil
+}
+
+func main() {
+	lambda.Start(handler)
 }
