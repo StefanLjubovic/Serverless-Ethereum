@@ -4,12 +4,11 @@ import (
 	model "backend/model"
 	"context"
 	"fmt"
-	"github.com/aws/jsii-runtime-go"
-	"log"
-
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 type CoursesService struct {
@@ -18,13 +17,13 @@ type CoursesService struct {
 }
 
 func NewCoursesHandler() *CoursesService {
-	sdkConfig, err := config.LoadDefaultConfig(context.TODO())
-	if err != nil {
-		log.Fatalf("unable to load SDK config, %v", err)
-	}
+	//sdkConfig, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
+	//if err != nil {
+	//	log.Fatalf("unable to load SDK config, %v", err)
+	//}
 	return &CoursesService{
 		TableName:      "Course",
-		DynamoDbClient: dynamodb.NewFromConfig(sdkConfig),
+		DynamoDbClient: nil,
 	}
 
 }
@@ -32,8 +31,19 @@ func NewCoursesHandler() *CoursesService {
 func (coursesService *CoursesService) GetAllCourses() (*[]model.Course, error) {
 
 	input := &dynamodb.QueryInput{
-		TableName: jsii.String(coursesService.TableName),
+		TableName:              aws.String(coursesService.TableName),
+		KeyConditionExpression: aws.String("id = :id_value"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":id_value": &types.AttributeValueMemberN{Value: "1"},
+		},
 	}
+
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
+	if err != nil {
+		fmt.Println("Error with cfg: ", err)
+	}
+	coursesService.DynamoDbClient = dynamodb.NewFromConfig(cfg)
+
 	result, err := coursesService.DynamoDbClient.Query(context.TODO(), input)
 	if err != nil {
 		fmt.Println("Failed to query DynamoDB:", err)

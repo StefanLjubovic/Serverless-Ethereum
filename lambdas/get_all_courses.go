@@ -35,22 +35,22 @@ func main() {
 
 func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 
-	//courses, err := courseService.GetAllCourses()
-	//fmt.Println(courses)
-	//if err != nil {
-	//	return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil
-	//}
-	//
-	//responseBody, err := json.Marshal(courses)
-	//fmt.Println(responseBody)
-	//if err != nil {
-	//	log.Printf("failed to marshal courses: %v", err)
-	//	return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil
-	//}
+	courses, err := courseService.GetAllCourses()
+	fmt.Println(courses)
+	if err != nil {
+		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil
+	}
+
+	responseBody, err := json.Marshal(courses)
+	fmt.Println(responseBody)
+	if err != nil {
+		log.Printf("failed to marshal courses: %v", err)
+		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil
+	}
 
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusOK,
-		Body:       string("Hello"),
+		Body:       string(responseBody),
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},
