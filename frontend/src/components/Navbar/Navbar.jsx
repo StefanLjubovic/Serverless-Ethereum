@@ -2,7 +2,15 @@ import './Navbar.css'
 import Logo from '../../assets/logo-color.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 function Navbar() {
+
+    const navigate = useNavigate();
+
+    function courseNavigate(){
+        navigate('/course-create');
+    }
+
     return (
         <div className="navigation">
             <div>
@@ -18,6 +26,7 @@ function Navbar() {
                 <div className="btn-div">
                     <button className='login'>Log in</button>
                     <button>Sign up</button>
+                    <button onClick={courseNavigate}>Create Course</button>
                 </div>
             </div>
         </div>
