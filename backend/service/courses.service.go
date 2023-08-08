@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"strconv"
 )
 
 type CoursesService struct {
@@ -29,24 +30,19 @@ func NewCoursesHandler() *CoursesService {
 }
 
 func (coursesService *CoursesService) GetAllCourses() (*[]model.Course, error) {
-
-	input := &dynamodb.QueryInput{
-		TableName:              aws.String(coursesService.TableName),
-		KeyConditionExpression: aws.String("id = :id_value"),
-		ExpressionAttributeValues: map[string]types.AttributeValue{
-			":id_value": &types.AttributeValueMemberN{Value: "1"},
-		},
-	}
-
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
 	if err != nil {
-		fmt.Println("Error with cfg: ", err)
+		fmt.Println("Failed to make configuration: ", err)
 	}
 	coursesService.DynamoDbClient = dynamodb.NewFromConfig(cfg)
 
-	result, err := coursesService.DynamoDbClient.Query(context.TODO(), input)
+	input := &dynamodb.ScanInput{
+		TableName: aws.String(coursesService.TableName),
+	}
+
+	result, err := coursesService.DynamoDbClient.Scan(context.TODO(), input)
 	if err != nil {
-		fmt.Println("Failed to query DynamoDB:", err)
+		fmt.Println("Failed to scan all courses:", err)
 		return nil, err
 	}
 	var courses []model.Course
@@ -63,5 +59,31 @@ func (coursesService *CoursesService) GetAllCourses() (*[]model.Course, error) {
 }
 
 func (coursesService *CoursesService) GetCourseById(id int) (*model.Course, error) {
-	return nil, nil
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
+	if err != nil {
+		fmt.Println("Failed to make configuration: ", err)
+	}
+	coursesService.DynamoDbClient = dynamodb.NewFromConfig(cfg)
+
+	input := &dynamodb.GetItemInput{
+		TableName: aws.String(coursesService.TableName),
+		Key: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberN{Value: strconv.Itoa(id)},
+		},
+	}
+
+	result, err := coursesService.DynamoDbClient.GetItem(context.TODO(), input)
+	if err != nil {
+		fmt.Println("Failed to get course: ", err)
+		return nil, err
+	}
+
+	course := new(model.Course)
+	err = attributevalue.UnmarshalMap(result.Item, course)
+	if err != nil {
+		fmt.Println("Failed to unmarshal course")
+		return nil, err
+	}
+
+	return course, nil
 }

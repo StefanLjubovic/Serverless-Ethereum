@@ -29,26 +29,27 @@ func init() {
 }
 
 func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	course, err := courseService.GetCourseById(1)
+	course, err := courseService.GetCourseById(2)
 	fmt.Println(course)
 	if err != nil {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: http.StatusNotFound,
+			Body:       string("Course with provided id does not exist"),
 		}, nil
 	}
 
-	//responseBody, err := json.Marshal(course)
-	//fmt.Println(responseBody)
-	//if err != nil {
-	//	log.Printf("Failed to marshal course: %v", err)
-	//	return events.APIGatewayV2HTTPResponse{
-	//		StatusCode: http.StatusInternalServerError,
-	//	}, nil
-	//}
+	responseBody, err := json.Marshal(course)
+	fmt.Println(responseBody)
+	if err != nil {
+		log.Printf("Failed to marshal course: %v", err)
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: http.StatusInternalServerError,
+		}, nil
+	}
 
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusOK,
-		Body:       string("Hello"),
+		Body:       string(responseBody),
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},

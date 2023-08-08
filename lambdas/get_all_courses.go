@@ -44,7 +44,7 @@ func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.AP
 	responseBody, err := json.Marshal(courses)
 	fmt.Println(responseBody)
 	if err != nil {
-		log.Printf("failed to marshal courses: %v", err)
+		log.Printf("Failed to marshal courses: %v", err)
 		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil
 	}
 
