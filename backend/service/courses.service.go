@@ -9,7 +9,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"strconv"
 )
 
 type CoursesService struct {
@@ -58,7 +57,7 @@ func (coursesService *CoursesService) GetAllCourses() (*[]model.Course, error) {
 	return &courses, nil
 }
 
-func (coursesService *CoursesService) GetCourseById(id int) (*model.Course, error) {
+func (coursesService *CoursesService) GetCourseById(id string) (*model.Course, error) {
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
 	if err != nil {
 		fmt.Println("Failed to make configuration: ", err)
@@ -68,7 +67,7 @@ func (coursesService *CoursesService) GetCourseById(id int) (*model.Course, erro
 	input := &dynamodb.GetItemInput{
 		TableName: aws.String(coursesService.TableName),
 		Key: map[string]types.AttributeValue{
-			"id": &types.AttributeValueMemberN{Value: strconv.Itoa(id)},
+			"id": &types.AttributeValueMemberN{Value: id},
 		},
 	}
 

@@ -35,7 +35,8 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 
 	api := awscdkapigatewayv2alpha.NewHttpApi(*stack, jsii.String("http-api"), nil)
 
-	coursesFunctionIntg := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(jsii.String("courses-function-integration"), coursesFunction, nil)
+	coursesFunctionIntg := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("courses-function-integration"), coursesFunction, nil)
 
 	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
 		Path:        jsii.String("/courses"),
@@ -51,10 +52,11 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 
 	coursesTable.GrantReadData(coursesFunction2)
 
-	coursesFunctionIntg2 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(jsii.String("courses-function-integration"), coursesFunction2, nil)
+	coursesFunctionIntg2 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("courses-function-integration"), coursesFunction2, nil)
 
 	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
-		Path:        jsii.String("/courses/id"),
+		Path:        jsii.String("/courses/{id}"),
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
 		Integration: coursesFunctionIntg2})
 

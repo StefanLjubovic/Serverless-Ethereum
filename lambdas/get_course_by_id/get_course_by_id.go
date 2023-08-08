@@ -29,7 +29,8 @@ func init() {
 }
 
 func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	course, err := courseService.GetCourseById(2)
+	param := req.PathParameters["id"]
+	course, err := courseService.GetCourseById(param)
 	fmt.Println(course)
 	if err != nil {
 		return events.APIGatewayV2HTTPResponse{
