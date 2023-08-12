@@ -3,47 +3,26 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 import Logo from '../../../assets/code.jpg'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons';
-import Web3 from "web3";
 import { useState } from "react";
+import CourseService from "../../../service/CourseService";
+import Web3Service from "../../../service/Web3Service";
 function CourseRight(){
 
-    const [web3, setWeb3] = useState(null); 
-
-    async function connectToMetaMask(){
-        if (window.ethereum) {
-            window.web3 = new Web3(window.ethereum);
-            try {
-              // Request account access if needed
-              await window.ethereum.enable();
-              console.log("Connected to MetaMask!");
-              console.log(window.web3)
-              console.log(web3)
-              setWeb3(window.web3);
-              return true;
-            } catch (error) {
-              // User denied account access
-              console.log("User denied account access.");
-              return false;
-            }
-          } else {
-            // MetaMask is not available, prompt user to install it
-            console.log("Please install MetaMask to interact with this DApp.");
-            return false;
-          }
-    }
-
     async function buyCourse() {
-        // Connect to MetaMask
-        const isConnected = await connectToMetaMask();
-        if (!isConnected) {
-          return;
+        
+        let senderAddress = await Web3Service.getAccount()
+        let data ={
+          sender_address : senderAddress,
+          price_usd : 37.02
         }
-      
-        // Get the user's selected Ethereum account address from MetaMask
-        console.log(web3)
-        const accounts = await web3.eth.getAccounts();
-        const senderAddress = accounts[0];
-        console.log(senderAddress)
+        CourseService.DeployCouse(data).then(resp=>{
+          console.log(resp.data)
+          Web3Service.signTransaction(resp.data.payload).then(resp=>{
+              console.log(resp.data)
+          }).catch(err =>{
+            console.log(err)
+          })
+        })
     }
 
     return(

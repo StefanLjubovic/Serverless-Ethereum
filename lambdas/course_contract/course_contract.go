@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/dto"
 	"backend/service"
 	"context"
 	"encoding/json"
@@ -30,31 +31,25 @@ func init() {
 }
 
 func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	param := req.PathParameters["id"]
-	course, err := courseService.GetCourseById(param)
-	fmt.Println(course)
+	fmt.Println("started")
+	var body dto.CourseContract
+	err := json.Unmarshal([]byte(req.Body), &body)
 	if err != nil {
-		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusNotFound,
-			Body:       string("Course with provided id does not exist"),
-		}, nil
-	}
+		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusBadRequest}, nil
 
-	responseBody, err := json.Marshal(course)
-	fmt.Println(responseBody)
-	if err != nil {
-		log.Printf("Failed to marshal course: %v", err)
-		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusInternalServerError,
-		}, nil
 	}
+	fmt.Println(body)
+	payloadDTO, err := courseService.DeployContract(body)
+	if err != nil {
+		fmt.Println(err)
+		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil
+
+	}
+	ret, _ := json.Marshal(payloadDTO)
 
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusOK,
-		Body:       string(responseBody),
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
+		Body:       string(ret),
 	}, nil
 }
 

@@ -8,4 +8,6 @@ type Course struct {
 	Ratings     []Rating   `dynamodbav:"ratings"`
 	Categories  []Category `dynamodbav:"categories"`
 	Price       Price      `dynamodbav:"price"`
+	Image       string     `dynamodbav:"image"`
+	Certificate string     `dynamodbav:"certificate"`
 }

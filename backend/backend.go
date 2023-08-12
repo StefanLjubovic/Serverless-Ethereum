@@ -26,7 +26,8 @@ func NewBackendStack(scope constructs.Construct, id string, props *BackendStackP
 	service.DefineS3Bucket(&stack)
 	usersTable := service.CreateUsersTable(&stack)
 	coursesTable := service.CreateCourseTable(&stack)
-	service.DefineLambdas(&stack, *usersTable, *coursesTable)
+	s3_images_bucket := service.CreateCourseBucket(&stack)
+	service.DefineLambdas(&stack, *usersTable, *coursesTable, *s3_images_bucket)
 	return stack
 }
 

@@ -2,6 +2,9 @@ import React, { useState,useRef } from 'react'
 import "./FirstPage.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage, faXmark } from '@fortawesome/free-solid-svg-icons';
+import ImageService from '../../../service/ImageService';
+import CourseService from "../../../service/CourseService";
+import Web3Service from '../../../service/Web3Service';
 import NoImg from '../../../assets/no-img.jpg'
 
 function FirstPage({onPageChange }) {
@@ -56,8 +59,20 @@ function FirstPage({onPageChange }) {
               setcertPath('')
           }
 
-          function save(){
-            onPageChange(); 
+          async function save(){
+            let senderAddress = await Web3Service.getAccount()
+            let data ={
+              sender_address : senderAddress,
+              price_usd : 37.02
+            }
+            CourseService.DeployCouse(data).then(resp=>{
+              console.log(resp.data)
+              Web3Service.signTransaction(resp.data.payload).then(resp=>{
+                  console.log(resp.data)
+              }).catch(err =>{
+                console.log(err)
+              })
+            })
           }
 
 
