@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -30,31 +31,24 @@ func init() {
 }
 
 func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	param := req.PathParameters["id"]
-	course, err := courseService.GetCourseById(param)
-	fmt.Println(course)
+	fmt.Println("started")
+	param := req.PathParameters["price"]
+	floatNumber, err := strconv.ParseFloat(param, 64)
 	if err != nil {
-		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusNotFound,
-			Body:       string("Course with provided id does not exist"),
-		}, nil
-	}
+		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusBadRequest}, nil
 
-	responseBody, err := json.Marshal(course)
-	fmt.Println(responseBody)
-	if err != nil {
-		log.Printf("Failed to marshal course: %v", err)
-		return events.APIGatewayV2HTTPResponse{
-			StatusCode: http.StatusInternalServerError,
-		}, nil
 	}
+	payloadDTO, err := courseService.DeployContract(floatNumber)
+	if err != nil {
+		fmt.Println(err)
+		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil
+
+	}
+	ret, _ := json.Marshal(payloadDTO)
 
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: http.StatusOK,
-		Body:       string(responseBody),
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
+		Body:       string(ret),
 	}, nil
 }
 

@@ -2,6 +2,9 @@ import React, { useState,useRef } from 'react'
 import "./FirstPage.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage, faXmark } from '@fortawesome/free-solid-svg-icons';
+import ImageService from '../../../service/ImageService';
+import CourseService from "../../../service/CourseService";
+import Web3Service from '../../../service/Web3Service';
 import NoImg from '../../../assets/no-img.jpg'
 
 function FirstPage({onPageChange }) {
@@ -15,6 +18,7 @@ function FirstPage({onPageChange }) {
   const certInput = useRef(document.createElement("cert-input"));
 
   function uploadPhoto(event) {
+    Web3Service.getCourse()
     const files = event.target.files;
     const fileReader = new FileReader();
     fileReader.addEventListener('load', () => setWallpaperPath(fileReader.result));
@@ -56,9 +60,32 @@ function FirstPage({onPageChange }) {
               setcertPath('')
           }
 
-          function save(){
-            onPageChange(); 
-          }
+          async function save() {
+            CourseService.DeployCouse(37.02).then(async resp => {
+                console.log(resp.data);
+        
+                // Send the transaction and listen for confirmation
+                const receipt = await Web3Service.deployCourse(resp.data.id, resp.data.price_in_wei);
+                console.log("Transaction receipt:", receipt);
+        
+                if (receipt && receipt.status) {
+                    const course = {
+                        id: resp.data.id,
+                        name: "test",
+                        description: "dec",
+                        price_usd: 37.02,
+                        image: "path1",
+                        certificate: "path2"
+                    };
+        
+                    // Send the SaveCourse transaction and listen for confirmation
+                    CourseService.SaveCourse(course).then(async resp3 => {
+                        console.log(resp3);
+                    });
+                }
+            });
+        }
+        
 
 
   return (
