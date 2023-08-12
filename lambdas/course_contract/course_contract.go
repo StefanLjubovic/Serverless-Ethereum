@@ -1,7 +1,6 @@
 package main
 
 import (
-	"backend/dto"
 	"backend/service"
 	"context"
 	"encoding/json"
@@ -9,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -32,14 +32,13 @@ func init() {
 
 func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	fmt.Println("started")
-	var body dto.CourseContract
-	err := json.Unmarshal([]byte(req.Body), &body)
+	param := req.PathParameters["price"]
+	floatNumber, err := strconv.ParseFloat(param, 64)
 	if err != nil {
 		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusBadRequest}, nil
 
 	}
-	fmt.Println(body)
-	payloadDTO, err := courseService.DeployContract(body)
+	payloadDTO, err := courseService.DeployContract(floatNumber)
 	if err != nil {
 		fmt.Println(err)
 		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil

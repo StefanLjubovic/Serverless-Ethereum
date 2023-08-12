@@ -2,7 +2,6 @@ package service
 
 import (
 	"backend/contracts"
-	"backend/util"
 	"context"
 	"fmt"
 	"math/big"
@@ -13,36 +12,36 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-func DeployCourseCall(sender string, priceInETH float64, courseId uint) (string, error) {
+// func DeployCourseCall(sender string, priceInETH float64, courseId uint) (string, error) {
 
-	client, err := ethclient.Dial("https://sepolia.infura.io/v3/e62196cd12084efc85fca2472c42b04f") // Replace with your Ethereum node URL
-	if err != nil {
-		fmt.Println("Failed to connect to the Ethereum client:", err)
-		return "", err
-	}
-	priceInWei, err := util.ConvertEthToWei(priceInETH)
-	if err != nil {
-		fmt.Println("Failed to convert to wei:", err)
-		return "", err
-	}
+// 	client, err := ethclient.Dial("https://sepolia.infura.io/v3/e62196cd12084efc85fca2472c42b04f") // Replace with your Ethereum node URL
+// 	if err != nil {
+// 		fmt.Println("Failed to connect to the Ethereum client:", err)
+// 		return "", err
+// 	}
+// 	priceInWei, err := util.ConvertEthToWei(priceInETH)
+// 	if err != nil {
+// 		fmt.Println("Failed to convert to wei:", err)
+// 		return "", err
+// 	}
 
-	contractInstance, err := BindCourseManagerContract(client)
-	if err != nil {
-		fmt.Println("Failed to find instance:", err)
-		return "", err
-	}
+// 	contractInstance, err := BindCourseManagerContract(client)
+// 	if err != nil {
+// 		fmt.Println("Failed to find instance:", err)
+// 		return "", err
+// 	}
+// 	senderAddress := common.HexToAddress(sender)
+// 	auth := createTransactOpts(senderAddress, client, priceInWei)
 
-	senderAddress := common.HexToAddress(sender)
-	auth := createTransactOpts(senderAddress, client, priceInWei)
+// 	tx, err := contractInstance.DeployCourse(auth, big.NewInt(int64(courseId)), priceInWei)
+// 	if err != nil {
+// 		fmt.Println("Failed to deploy course:", err)
+// 		return "", err
+// 	}
+// 	txHash := tx.Hash().Hex()
 
-	tx, err := contractInstance.DeployCourse(auth, big.NewInt(int64(courseId)), coursePriceInWei).Data()
-	if err != nil {
-		fmt.Println("Failed to deploy course:", err)
-		return "", err
-	}
-	txHash := tx.Hash().Hex()
-	return txHash, nil
-}
+// 	return txHash, nil
+// }
 
 func BindCourseManagerContract(client *ethclient.Client) (*contracts.Contracts, error) {
 

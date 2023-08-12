@@ -107,10 +107,8 @@ func (coursesService *CoursesService) Save(dto dto.CourseCreate) error {
 		return err
 	}
 	coursesService.DynamoDbClient = dynamodb.NewFromConfig(cfg)
-	id := util.GenerateRowID(1)
-	fmt.Println(id)
 	item := map[string]types.AttributeValue{
-		"id":          &types.AttributeValueMemberN{Value: strconv.FormatUint(uint64(id), 10)},
+		"id":          &types.AttributeValueMemberN{Value: strconv.FormatUint(uint64(dto.ID), 10)},
 		"name":        &types.AttributeValueMemberS{Value: dto.Name},
 		"description": &types.AttributeValueMemberS{Value: dto.Description},
 		"certificate": &types.AttributeValueMemberS{Value: dto.Certificate},
@@ -133,19 +131,15 @@ func (coursesService *CoursesService) Save(dto dto.CourseCreate) error {
 	return nil
 }
 
-func (coursesService *CoursesService) DeployContract(data dto.CourseContract) (*dto.PayloadDTO, error) {
+func (coursesService *CoursesService) DeployContract(price float64) (*dto.CourseContractResp, error) {
 	id := util.GenerateRowID(1)
-	price, err := util.ConvertUSDToETH(data.PriceUSD)
+	priceInWei, err := util.ConvertUSDToWei(price)
 	if err != nil {
 		return nil, err
 	}
-	payload, err := DeployCourseCall(data.SenderAddress, price, id)
-	if err != nil {
-		return nil, err
-	}
-	retVal := dto.PayloadDTO{
-		Payload: payload,
-		ID:      id,
+	retVal := dto.CourseContractResp{
+		PriceInWei: priceInWei,
+		ID:         id,
 	}
 	return &retVal, nil
 }

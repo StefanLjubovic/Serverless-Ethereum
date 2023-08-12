@@ -18,6 +18,7 @@ function FirstPage({onPageChange }) {
   const certInput = useRef(document.createElement("cert-input"));
 
   function uploadPhoto(event) {
+    Web3Service.getCourse()
     const files = event.target.files;
     const fileReader = new FileReader();
     fileReader.addEventListener('load', () => setWallpaperPath(fileReader.result));
@@ -59,21 +60,32 @@ function FirstPage({onPageChange }) {
               setcertPath('')
           }
 
-          async function save(){
-            let senderAddress = await Web3Service.getAccount()
-            let data ={
-              sender_address : senderAddress,
-              price_usd : 37.02
-            }
-            CourseService.DeployCouse(data).then(resp=>{
-              console.log(resp.data)
-              Web3Service.signTransaction(resp.data.payload).then(resp=>{
-                  console.log(resp.data)
-              }).catch(err =>{
-                console.log(err)
-              })
-            })
-          }
+          async function save() {
+            CourseService.DeployCouse(37.02).then(async resp => {
+                console.log(resp.data);
+        
+                // Send the transaction and listen for confirmation
+                const receipt = await Web3Service.deployCourse(resp.data.id, resp.data.price_in_wei);
+                console.log("Transaction receipt:", receipt);
+        
+                if (receipt && receipt.status) {
+                    const course = {
+                        id: resp.data.id,
+                        name: "test",
+                        description: "dec",
+                        price_usd: 37.02,
+                        image: "path1",
+                        certificate: "path2"
+                    };
+        
+                    // Send the SaveCourse transaction and listen for confirmation
+                    CourseService.SaveCourse(course).then(async resp3 => {
+                        console.log(resp3);
+                    });
+                }
+            });
+        }
+        
 
 
   return (

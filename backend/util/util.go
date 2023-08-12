@@ -2,7 +2,6 @@ package util
 
 import (
 	"encoding/json"
-	"errors"
 	"math/big"
 	"math/rand"
 	"net/http"
@@ -26,17 +25,6 @@ func GetETHExchangeRate() (float64, error) {
 	return ethUSD, nil
 }
 
-func ConvertEthToWei(ethValue float64) (*big.Int, error) {
-	// Convert Ether to Wei using 10^18 as the conversion factor
-	weiValue := new(big.Int)
-	weiValue, ok := weiValue.SetString(big.NewFloat(ethValue).Mul(big.NewFloat(1e18), big.NewFloat(1e18)).Text('f', 0), 10)
-	if !ok {
-		return nil, errors.New("conversion error")
-	}
-
-	return weiValue, nil
-}
-
 const customEpoch = 1300000000000
 
 func GenerateRowID(shardID int) uint {
@@ -55,4 +43,14 @@ func ConvertUSDToETH(usdPrice float64) (float64, error) {
 
 	ethPrice := usdPrice / ethRate
 	return ethPrice, nil
+}
+
+func ConvertUSDToWei(usdPrice float64) (*big.Int, error) {
+	ethRate, _ := GetETHExchangeRate()
+	usdToEthPrice := usdPrice / ethRate
+	ethInWei := big.NewFloat(usdToEthPrice * 1e18) // Convert ETH to wei (1 ETH = 10^18 wei)
+
+	ethInWeiInt, _ := ethInWei.Int(nil) // Convert big float to big int
+
+	return ethInWeiInt, nil
 }

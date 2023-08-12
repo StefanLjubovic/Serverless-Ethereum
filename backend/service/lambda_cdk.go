@@ -106,7 +106,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 		jsii.String("courses-function-integration"), coursesFunction5, nil)
 
 	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
-		Path:        jsii.String("/courses/contract"),
-		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
+		Path:        jsii.String("/courses/contract/{price}"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
 		Integration: coursesFunctionIntg5})
 }

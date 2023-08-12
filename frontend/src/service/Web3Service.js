@@ -1,5 +1,7 @@
 import axios from 'axios';
 import Web3 from "web3";
+import { COUSE_MANAGER_ABI, COUSE_MANAGER_ADDRESS } from "../constants"
+import bigInt from 'big-integer';
 const Web3Service = {
 
     connectToMetaMask: async function() {
@@ -44,8 +46,48 @@ const Web3Service = {
             throw new error
         });
         }
-    }
+    },
 
+     getCourseManager: async function() {
+        const web3 = await this.connectToMetaMask()
+    
+        return new web3.eth.Contract(COUSE_MANAGER_ABI, COUSE_MANAGER_ADDRESS);
+      },
+
+      deployCourse: async function(id, priceInWei) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const contract = await this.getCourseManager();
+                const address = await this.getAccount();
+    
+                contract.methods
+                    .deployCourse(id.toString(), priceInWei.toString())
+                    .send({ from: address })
+                    .then((res) => {
+                        console.log(res);
+                        resolve(res); // Resolve with the transaction response
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        reject(err); // Reject with the error
+                    });
+            } catch (error) {
+                console.log(error);
+                reject(error); // Reject with any unexpected error
+            }
+        });
+    },
+    
+
+      getCourse: async function(){
+        const contract = await this.getCourseManager();
+        const address = await this.getAccount()
+        contract.methods.getCourse(address,100)
+        .call()
+        .then((res) => {
+            console.log(res);
+      })
+      }
 }
 
 export default Web3Service;
