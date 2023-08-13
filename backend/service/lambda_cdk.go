@@ -36,7 +36,17 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 	coursesTable.GrantReadData(coursesFunction)
 
 	api := awscdkapigatewayv2alpha.NewHttpApi(*stack, jsii.String("http-api"), &awscdkapigatewayv2alpha.HttpApiProps{
-		CorsPreflight: &awscdkapigatewayv2alpha.CorsPreflightOptions{AllowOrigins: &[]*string{aws.String("*")}},
+		CorsPreflight: &awscdkapigatewayv2alpha.CorsPreflightOptions{
+			AllowOrigins: &[]*string{aws.String("*")},
+			AllowMethods: &[]awscdkapigatewayv2alpha.CorsHttpMethod{
+				awscdkapigatewayv2alpha.CorsHttpMethod_GET,
+				awscdkapigatewayv2alpha.CorsHttpMethod_POST,
+				awscdkapigatewayv2alpha.CorsHttpMethod_PUT,
+				awscdkapigatewayv2alpha.CorsHttpMethod_DELETE,
+			},
+			AllowHeaders:  &[]*string{aws.String("Content-Type"), aws.String("Authorization")},
+			ExposeHeaders: &[]*string{aws.String("Access-Control-Allow-Origin")},
+		},
 	})
 
 	coursesFunctionIntg := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
@@ -109,4 +119,36 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 		Path:        jsii.String("/courses/contract/{price}"),
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
 		Integration: coursesFunctionIntg5})
+
+	coursesFunction6 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("add_section"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Environment: &map[string]*string{"COURSES_SERVICE": aws.String(string(serviceJSON))},
+			Entry:       jsii.String("../lambdas/add_section")})
+
+	coursesFunctionIntg6 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("courses-function-integration"), coursesFunction6, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/courses/section"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
+		Integration: coursesFunctionIntg6})
+
+	coursesTable.GrantReadWriteData(coursesFunction6)
+
+	coursesFunction7 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("add_video"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Environment: &map[string]*string{"COURSES_SERVICE": aws.String(string(serviceJSON))},
+			Entry:       jsii.String("../lambdas/add_video")})
+
+	coursesFunctionIntg7 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("courses-function-integration"), coursesFunction7, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/courses/video"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
+		Integration: coursesFunctionIntg7})
+
+	coursesTable.GrantReadWriteData(coursesFunction7)
 }

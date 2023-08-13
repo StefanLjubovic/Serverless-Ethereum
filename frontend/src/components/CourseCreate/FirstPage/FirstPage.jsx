@@ -16,6 +16,9 @@ function FirstPage({onPageChange }) {
   const [certPath,setcertPath] = useState("")
   const [certFile, setcertFile] = useState(null)
   const certInput = useRef(document.createElement("cert-input"));
+  const [name,setName] = useState("")
+  const [description,setDescription] = useState("")
+  const [price,setPrice] = useState('')
 
   function uploadPhoto(event) {
     Web3Service.getCourse()
@@ -61,8 +64,10 @@ function FirstPage({onPageChange }) {
           }
 
           async function save() {
+            if(name === '' || description === '' || price ==='') return
             CourseService.DeployCouse(37.02).then(async resp => {
                 console.log(resp.data);
+                let id = resp.data.id
         
                 // Send the transaction and listen for confirmation
                 const receipt = await Web3Service.deployCourse(resp.data.id, resp.data.price_in_wei);
@@ -71,9 +76,9 @@ function FirstPage({onPageChange }) {
                 if (receipt && receipt.status) {
                     const course = {
                         id: resp.data.id,
-                        name: "test",
-                        description: "dec",
-                        price_usd: 37.02,
+                        name: name,
+                        description: description,
+                        price_usd: price,
                         image: "path1",
                         certificate: "path2"
                     };
@@ -81,6 +86,7 @@ function FirstPage({onPageChange }) {
                     // Send the SaveCourse transaction and listen for confirmation
                     CourseService.SaveCourse(course).then(async resp3 => {
                         console.log(resp3);
+                        onPageChange(id)
                     });
                 }
             });
@@ -91,10 +97,10 @@ function FirstPage({onPageChange }) {
   return (
     <div className='create'>
       <div className='name-price'>
-        <input type="text" name="name" placeholder='Name' className='name'/>
-        <input type="text" name="price" placeholder='Price (USD$)' className='price'/>
+        <input type="text" name="name" placeholder='Name' className='name' value={name} onChange={(e) => setName(e.target.value)}/>
+        <input type="text" name="price" placeholder='Price (USD$)' className='price' value={price} onChange={(e) => setPrice(e.target.value)}/>
       </div>
-      <textarea name="description" id="" cols="30" rows="5"  className='description' placeholder='Description'></textarea>
+      <textarea name="description" id="" cols="30" rows="5"  className='description' value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Description'></textarea>
       <div className='images'>
         <div className='image'>
           <label>Course image</label>

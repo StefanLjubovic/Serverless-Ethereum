@@ -1,6 +1,6 @@
 package model
 
 type Section struct {
-	Name  string `dynamodbav:"name"`
-	Video Video  `dynamodbav:"video"`
+	Name   string  `dynamodbav:"name"`
+	Videos []Video `dynamodbav:"videos"`
 }
