@@ -5,11 +5,9 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strconv"
 
 	"github.com/aws/jsii-runtime-go"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -61,44 +59,44 @@ func (usersService *UsersService) GetUserByUsername(username string) (*model.Use
 	return &user, nil
 }
 
-func (usersService *UsersService) AddUserCourse(username string, id uint64) error {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
-	if err != nil {
-		fmt.Println("Failed to make configuration: ", err)
-		return err
-	}
-	user, err := usersService.GetUserByUsername(username)
-	user.CreatedCourses = append(user.CreatedCourses, uint(id))
-	if err != nil {
-		fmt.Println("Failed to find user: ", err)
-		return err
-	}
+// func (usersService *UsersService) AddUserCourse(username string, id uint64) error {
+// 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
+// 	if err != nil {
+// 		fmt.Println("Failed to make configuration: ", err)
+// 		return err
+// 	}
+// 	user, err := usersService.GetUserByUsername(username)
+// 	user.CreatedCourses = append(user.CreatedCourses, uint(id))
+// 	if err != nil {
+// 		fmt.Println("Failed to find user: ", err)
+// 		return err
+// 	}
 
-	usersService.DynamoDbClient = dynamodb.NewFromConfig(cfg)
+// 	usersService.DynamoDbClient = dynamodb.NewFromConfig(cfg)
 
-	courseList := make([]types.AttributeValue, len(user.CreatedCourses))
-	for _, id := range user.CreatedCourses {
-		idStr := strconv.FormatUint(uint64(id), 10)
-		courseList = append(courseList, &types.AttributeValueMemberS{Value: idStr})
-	}
+// 	courseList := make([]types.AttributeValue, len(user.CreatedCourses))
+// 	for _, id := range user.CreatedCourses {
+// 		idStr := strconv.FormatUint(uint64(id), 10)
+// 		courseList = append(courseList, &types.AttributeValueMemberS{Value: idStr})
+// 	}
 
-	updateInput := &dynamodb.UpdateItemInput{
-		TableName: aws.String(usersService.TableName),
-		Key: map[string]types.AttributeValue{
-			"username": &types.AttributeValueMemberS{Value: username},
-		},
-		UpdateExpression: aws.String("SET created_courses = :courses"),
-		ExpressionAttributeValues: map[string]types.AttributeValue{
-			":courses": &types.AttributeValueMemberL{Value: courseList},
-		},
-	}
+// 	updateInput := &dynamodb.UpdateItemInput{
+// 		TableName: aws.String(usersService.TableName),
+// 		Key: map[string]types.AttributeValue{
+// 			"username": &types.AttributeValueMemberS{Value: username},
+// 		},
+// 		UpdateExpression: aws.String("SET created_courses = :courses"),
+// 		ExpressionAttributeValues: map[string]types.AttributeValue{
+// 			":courses": &types.AttributeValueMemberL{Value: courseList},
+// 		},
+// 	}
 
-	_, err = usersService.DynamoDbClient.UpdateItem(context.TODO(), updateInput)
-	if err != nil {
-		fmt.Println("Error updating user item: ", err)
-		return err
-	}
+// 	_, err = usersService.DynamoDbClient.UpdateItem(context.TODO(), updateInput)
+// 	if err != nil {
+// 		fmt.Println("Error updating user item: ", err)
+// 		return err
+// 	}
 
-	fmt.Println("Course added to user successfully.")
-	return nil
-}
+// 	fmt.Println("Course added to user successfully.")
+// 	return nil
+// }

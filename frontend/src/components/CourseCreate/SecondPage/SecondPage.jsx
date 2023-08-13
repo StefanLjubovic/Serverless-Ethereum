@@ -1,37 +1,73 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import "./SecondPage.css"
 import DropdownCreate from './DropdownCreate/DropdownCreate'
-function SecondPage() {
+import CourseService from '../../../service/CourseService';
+function SecondPage({id}) {
 
   const [isOpen, setIsOpen] = useState(false);
-  const [dropdownItems,setDropdownItems] = useState(['Item 1', 'Item 2', 'Item 3']);
+  const [sections,setSections] = useState(['Item 1', 'Item 2', 'Item 3']);
   const [newSectionName, setNewSectionName] = useState('');
+  const [course,setCourse] = useState(null)
+
   function toggleDropdown() {
       setIsOpen(!isOpen);
   }
 
+  useEffect(()=>{
+    if(id != ""){
+      CourseService.GetById(id).then(resp=>{
+        setCourse(resp.data)
+        console.log(course)
+      })
+    }
+  },[id])
+
   function addSection(){
     if (newSectionName.trim() !== '') {
-      setDropdownItems([...dropdownItems, newSectionName]);
-      setNewSectionName('');
+      setSections([...sections, newSectionName]);
+      const data ={
+        id : id,
+        section_name: newSectionName
+      }
+      CourseService.AddSection(data).then(resp=>{
+        console.log(resp)
+        const newSection = {
+          Name: newSectionName,
+          Videos: []
+        };
+        
+        course.Sections = [...course.Sections, newSection];
+              setNewSectionName('');
+      })
     }
   }
 
   
   return (
     <div className='second'>
-        <div>
-        <input type="text" name="name" placeholder='Section name' className='name' value={newSectionName}
-          onChange={(e) => setNewSectionName(e.target.value)}/>
-        <div className='btn-div'><button className='add' onClick={addSection}>Add</button></div>
+      <div>
+        <input
+          type="text"
+          name="name"
+          placeholder='Section name'
+          className='name'
+          value={newSectionName}
+          onChange={(e) => setNewSectionName(e.target.value)}
+        />
+        <div className='btn-div'>
+          <button className='add' onClick={addSection}>Add</button>
         </div>
-        <div>
-        {dropdownItems.map((item, index) => (
-                <DropdownCreate key={index} items={dropdownItems} />
-            ))}
+      </div>
+      {course !== null && course !== undefined && course.Sections !== undefined && (
+        <div className='dropdown'>
+          {course.Sections.map((item, index) => (
+            <DropdownCreate key={index} section={item} id={id}/>
+          ))}
         </div>
+      )}
     </div>
-  )
+  );
+  
 }
 
 export default SecondPage

@@ -1,11 +1,13 @@
 import "./DropdownCreate.css"
 import React, { useState,useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown,faTrash,faPen } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown,faTrash,faPen,faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
-function DropdownCreate(){
+import { useEffect } from "react";
+import CourseService from "../../../../service/CourseService";
+function DropdownCreate({ section ,id }){
     const [isOpen, setIsOpen] = useState(false);
-    const items = ['Item 1', 'Item 2', 'Item 3'];
+    const [items,setItems] =useState(['Item 1', 'Item 2', 'Item 3'])
     function toggleDropdown() {
       setIsOpen(!isOpen);
     }
@@ -13,7 +15,7 @@ function DropdownCreate(){
     const [imageFile, setImageFile] = useState(null)
     const [imagePath, setImagePath] = useState('')
     const fileInput = useRef(document.createElement("input"));
-
+    const [videoTitle, setVideoTitle] = useState('');
     
     function uploadPhoto(event) {
       const files = event.target.files;
@@ -21,9 +23,32 @@ function DropdownCreate(){
       fileReader.addEventListener('load', () => setImagePath(fileReader.result));
       fileReader.readAsDataURL(files[0]);
       setImageFile(event.target.files[0]);
-      items.push('Change the title of video')
   }
 
+  const handleVideoTitleChange = (e) => {
+    setVideoTitle(e.target.value);
+  };
+
+  function SaveVideo(){
+    if(videoTitle === '') return
+      const add_video ={
+        "section_name" : section.Name,
+        "video_name" : videoTitle,
+        "course_id" : id,
+        "video_path" : "path",
+        "length" : 3
+      }
+      CourseService.AddVideo(add_video).then(resp=>{
+        const addedVideo = {
+          Name : videoTitle,
+          SectionName : section.Name
+        }
+        setImageFile(null)
+        setImagePath("")
+        setVideoTitle("")
+        section.Videos = [...section.Videos, addedVideo];
+      })
+  }
 
   const onPickFile = () => {
       fileInput.current.click();
@@ -41,13 +66,13 @@ function DropdownCreate(){
       return true
     }
     return(
-        <div className="dropdown">
-        <div onClick={toggleDropdown} className="btn">Toggle Dropdown
+        <div className="dropdown-create">
+        <div onClick={toggleDropdown} className="btn">{section.Name}
         <FontAwesomeIcon icon={faChevronDown} className="icon"/>
         </div>
         {isOpen && (
           <div className="dropdown-content">
-            {items.map((item, index) => (
+            {section.Videos.map((item, index) => (
               <div key={index} className="dropdown-item">
                 <input
                 type="checkbox"
@@ -55,13 +80,35 @@ function DropdownCreate(){
                 onChange={() => handleCheckboxChange(item)}
               />
               <div className="desc">
-                <p className="title">Deploy ERC731 Token From OpenZeppelin As OpenSea NFT on Goerli Using Remix &nbsp; &nbsp; <FontAwesomeIcon icon={faTrash} className="icon"/>  &nbsp; &nbsp;<FontAwesomeIcon icon={faPen} className="icon"/></p>
+                <div>
+                  <p className="title">{item.Name}</p>
+                  <div className="edit-delete">
+                    <FontAwesomeIcon icon={faTrash} className="icon"/>
+                     <FontAwesomeIcon icon={faPen} className="icon"/>
+                  </div>
+                </div>
                 <p className="dur">
                 <FontAwesomeIcon icon={faYoutube} className="icon"/>1 min
                 </p>
               </div>
               </div>
             ))}
+            {imagePath != "" &&
+              <div className="desc-new">
+                <div>
+                  <input type="text" placeholder="Add video title" className='name'value={videoTitle}
+                  onChange={handleVideoTitleChange}
+           />
+                  <div className="edit-delete">
+                    <FontAwesomeIcon icon={faTrash} className="icon"/>
+                     <FontAwesomeIcon icon={faCheck} className="icon" onClick={SaveVideo}/>
+                  </div>
+                </div>
+                <p className="dur">
+                <FontAwesomeIcon icon={faYoutube} className="icon"/>1 min
+                </p>
+              </div>
+            }
             <input type="file" onChange={uploadPhoto} accept="video/*" style={{ display: 'none' }} ref={fileInput} />
             <button className="add" onClick={onPickFile}>Add</button>
           </div>

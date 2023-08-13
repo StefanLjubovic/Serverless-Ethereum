@@ -26,7 +26,7 @@
     gap: 1rem;
     width: 90%;
     font-size: 0.8rem;
-    height: 3rem;
+    height: 4rem;
     padding-left: 1rem;
 }
 
@@ -40,21 +40,72 @@
     font-size: 0.7rem;
 }
 
-.dropdown-create .desc{
+.dropdown-create .icon{
+    cursor: pointer;
+}
+
+.dropdown-create .desc {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: space-between;
+    height: 100%; /* Take up 100% of parent's height */
+    gap: 1rem;
+    width: 100%;
     color: var(--black);
+}
+
+.dropdown-create .desc-new {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: 4rem; /* Take up 100% of parent's height */
+    padding-left: 3rem;
+    gap: 1rem;
+    width: 85%;
+    color: var(--black);
+}
+
+.dropdown-create .desc-new> :nth-child(1) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.second .name{
+    width: 70%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--black);
+    font-size: 16px;
+    outline: none;
+  }
+
+.dropdown-create .desc> :nth-child(1) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.dropdown-create .edit-delete{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:1rem;
 }
 
 .dropdown-create .dur{
     margin-top: -1rem;
     font-size: 0.6rem;
     color: #7b7e7e;
+    flex: 1;
 }
 
 .dropdown-create .add{
     color: white;
     background-color: black;
+    flex: 1;
 }

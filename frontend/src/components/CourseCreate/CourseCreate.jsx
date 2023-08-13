@@ -5,8 +5,10 @@ import { useState } from 'react'
 export const CourseCreate = () => {
 
   const [isFirstPage,setIsFirstPage] = useState(true)
-  const handlePageChange = () => {
+  const [id,setId] =useState(0)
+  const handlePageChange = (newId) => {
     setIsFirstPage(false);
+    setId(newId)
   };
   
   return (
@@ -15,7 +17,7 @@ export const CourseCreate = () => {
         isFirstPage ?
       <FirstPage onPageChange={handlePageChange}></FirstPage>
       :
-      <SecondPage></SecondPage>
+      <SecondPage id={id}></SecondPage>
     }
     </div>
   )

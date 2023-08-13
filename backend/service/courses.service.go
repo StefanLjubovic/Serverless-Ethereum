@@ -3,90 +3,37 @@ package service
 import (
 	"backend/dto"
 	model "backend/model"
+	"backend/repository"
 	"backend/util"
 	"context"
-	"fmt"
+	"errors"
 	"strconv"
 
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 type CoursesService struct {
-	DynamoDbClient *dynamodb.Client
-	TableName      string
-	S3ImageService S3ImageServiceImpl
+	DynamoDbClient   *dynamodb.Client
+	S3ImageService   S3ImageServiceImpl
+	CourseRepository repository.CoursesDynamoDBStore
 }
 
 func NewCoursesHandler(bucketName string) *CoursesService {
 	s3Service := NewS3ClientService(bucketName)
+	repository := repository.NewCoursesDBStore("Course")
 	return &CoursesService{
-		TableName:      "Course",
-		DynamoDbClient: nil,
-		S3ImageService: *s3Service,
+		CourseRepository: *repository,
+		DynamoDbClient:   nil,
+		S3ImageService:   *s3Service,
 	}
 }
 
 func (coursesService *CoursesService) GetAllCourses() (*[]model.Course, error) {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
-	if err != nil {
-		fmt.Println("Failed to make configuration: ", err)
-	}
-	coursesService.DynamoDbClient = dynamodb.NewFromConfig(cfg)
-
-	input := &dynamodb.ScanInput{
-		TableName: aws.String(coursesService.TableName),
-	}
-
-	result, err := coursesService.DynamoDbClient.Scan(context.TODO(), input)
-	if err != nil {
-		fmt.Println("Failed to scan all courses:", err)
-		return nil, err
-	}
-	var courses []model.Course
-	for _, item := range result.Items {
-		var course model.Course
-		// Access individual attributes of each item
-		err = attributevalue.UnmarshalMap(item, &course)
-		if err != nil {
-			return nil, err
-		}
-		courses = append(courses, course)
-	}
-	return &courses, nil
+	return coursesService.CourseRepository.GetAllCourses()
 }
 
 func (coursesService *CoursesService) GetCourseById(id string) (*model.Course, error) {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
-	if err != nil {
-		fmt.Println("Failed to make configuration: ", err)
-	}
-	coursesService.DynamoDbClient = dynamodb.NewFromConfig(cfg)
-
-	input := &dynamodb.GetItemInput{
-		TableName: aws.String(coursesService.TableName),
-		Key: map[string]types.AttributeValue{
-			"id": &types.AttributeValueMemberN{Value: id},
-		},
-	}
-
-	result, err := coursesService.DynamoDbClient.GetItem(context.TODO(), input)
-	if err != nil {
-		fmt.Println("Failed to get course: ", err)
-		return nil, err
-	}
-
-	course := new(model.Course)
-	err = attributevalue.UnmarshalMap(result.Item, course)
-	if err != nil {
-		fmt.Println("Failed to unmarshal course")
-		return nil, err
-	}
-
-	return course, nil
+	return coursesService.CourseRepository.GetCourseById(id)
 }
 
 func (coursesService *CoursesService) UploadObject(image []byte) (string, error) {
@@ -96,39 +43,10 @@ func (coursesService *CoursesService) UploadObject(image []byte) (string, error)
 
 func (coursesService *CoursesService) Save(dto dto.CourseCreate) error {
 	ethPrice, err := util.ConvertUSDToETH(dto.PriceUSD)
-	fmt.Println(ethPrice)
 	if err != nil {
-		fmt.Println("Failed to convert usd to eth: ", err)
 		return err
 	}
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
-	if err != nil {
-		fmt.Println("Failed to make configuration: ", err)
-		return err
-	}
-	coursesService.DynamoDbClient = dynamodb.NewFromConfig(cfg)
-	item := map[string]types.AttributeValue{
-		"id":          &types.AttributeValueMemberN{Value: strconv.FormatUint(uint64(dto.ID), 10)},
-		"name":        &types.AttributeValueMemberS{Value: dto.Name},
-		"description": &types.AttributeValueMemberS{Value: dto.Description},
-		"certificate": &types.AttributeValueMemberS{Value: dto.Certificate},
-		"image":       &types.AttributeValueMemberS{Value: dto.Image},
-		"price": &types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
-			"priceETH": &types.AttributeValueMemberN{Value: strconv.FormatFloat(dto.PriceUSD, 'f', -1, 64)},
-			"priceUSD": &types.AttributeValueMemberN{Value: strconv.FormatFloat(ethPrice, 'f', -1, 64)},
-		}},
-	}
-
-	input := &dynamodb.PutItemInput{
-		TableName: aws.String(coursesService.TableName),
-		Item:      item,
-	}
-	_, err = coursesService.DynamoDbClient.PutItem(context.TODO(), input)
-	if err != nil {
-		fmt.Println("error inserting to database: ", err)
-		return err
-	}
-	return nil
+	return coursesService.CourseRepository.Save(ethPrice, dto)
 }
 
 func (coursesService *CoursesService) DeployContract(price float64) (*dto.CourseContractResp, error) {
@@ -142,4 +60,47 @@ func (coursesService *CoursesService) DeployContract(price float64) (*dto.Course
 		ID:         id,
 	}
 	return &retVal, nil
+}
+
+func (coursesService *CoursesService) AddSection(req dto.AddSectionDTO) error {
+	course, err := coursesService.CourseRepository.GetCourseById(strconv.Itoa(req.ID))
+	if err != nil {
+		return err
+	}
+	section := model.Section{
+		Name:   req.SectionName,
+		Videos: []model.Video{},
+	}
+	course.Sections = append(course.Sections, section)
+	return coursesService.CourseRepository.UpdateSections(course.Sections, course.ID)
+}
+
+func (coursesService *CoursesService) AddVideo(req dto.AddVideoDTO) error {
+	course, err := coursesService.CourseRepository.GetCourseById(strconv.Itoa(req.CourseID))
+	if err != nil {
+		return err
+	}
+	var targetSection *model.Section
+	for idx, section := range course.Sections {
+		if section.Name == req.SectionName {
+			targetSection = &course.Sections[idx]
+			break
+		}
+	}
+	if targetSection == nil {
+		return errors.New("Section not found")
+	}
+	newVideo := model.Video{
+		Name:    req.VideoName,
+		Length:  req.Length,
+		Path:    req.VideoPath,
+		Watched: false,
+	}
+	targetSection.Videos = append(targetSection.Videos, newVideo)
+	err = coursesService.CourseRepository.UpdateSections(course.Sections, req.CourseID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

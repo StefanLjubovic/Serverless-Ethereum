@@ -15,13 +15,43 @@ const CourseService = {
 
     SaveCourse: function(data) {
         console.log(data)
-        return axios.get(this.baseURL + 'courses', data,{
+        return axios.post(this.baseURL + 'courses', data,{
             headers: {
                 'Content-Type': 'application/json',
                  Accept: 'application/json',
             }
         });
+    },
+
+    GetById: function(id) {
+        return axios.get(this.baseURL + 'courses/'+id,{
+            headers: {
+                'Content-Type': 'application/json',
+                 Accept: 'application/json',
+            }
+        });
+    },
+
+    AddSection: function(data) {
+        console.log(data)
+        return axios.post(this.baseURL + 'courses/section', data,{
+            headers: {
+                'Content-Type': 'application/json',
+                 Accept: 'application/json',
+            }
+        });
+    },
+    AddVideo: function(data) {
+        console.log(data)
+        return axios.post(this.baseURL + 'courses/video' , data , {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        });
     }
+
+    
 
 
 }
