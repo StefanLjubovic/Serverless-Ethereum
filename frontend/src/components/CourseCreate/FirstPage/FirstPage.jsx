@@ -6,13 +6,15 @@ import ImageService from '../../../service/ImageService';
 import CourseService from "../../../service/CourseService";
 import Web3Service from '../../../service/Web3Service';
 import NoImg from '../../../assets/no-img.jpg'
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content'
 
 function FirstPage({onPageChange }) {
 
   const [wallpaperPath,setWallpaperPath] = useState("")
   const [wallpaperFile, setWallpaperFile] = useState(null)
   const wallpaperInput = useRef(document.createElement("input"));
-
+  const MySwal = withReactContent(Swal)
   const [certPath,setcertPath] = useState("")
   const [certFile, setcertFile] = useState(null)
   const certInput = useRef(document.createElement("cert-input"));
@@ -70,7 +72,16 @@ function FirstPage({onPageChange }) {
                 let id = resp.data.id
         
                 // Send the transaction and listen for confirmation
+                MySwal.fire({
+                  title: 'Waiting response from a server.',
+                 html: 'This will take a second.',
+                 timerProgressBar: true,
+                 didOpen: () => {
+                  MySwal.showLoading()
+                 },
+                 })
                 const receipt = await Web3Service.deployCourse(resp.data.id, resp.data.price_in_wei);
+                MySwal.close();
                 console.log("Transaction receipt:", receipt);
         
                 if (receipt && receipt.status) {
@@ -78,10 +89,11 @@ function FirstPage({onPageChange }) {
                         id: resp.data.id,
                         name: name,
                         description: description,
-                        price_usd: price,
+                        price_usd: Number(price),
                         image: "path1",
                         certificate: "path2"
                     };
+                    console.log(course)
         
                     // Send the SaveCourse transaction and listen for confirmation
                     CourseService.SaveCourse(course).then(async resp3 => {
