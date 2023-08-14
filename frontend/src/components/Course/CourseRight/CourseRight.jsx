@@ -10,19 +10,8 @@ function CourseRight(){
 
     async function buyCourse() {
         
-        let senderAddress = await Web3Service.getAccount()
-        let data ={
-          sender_address : senderAddress,
-          price_usd : 37.02
-        }
-        CourseService.DeployCouse(data).then(resp=>{
-          console.log(resp.data)
-          Web3Service.signTransaction(resp.data.payload).then(resp=>{
-              console.log(resp.data)
-          }).catch(err =>{
-            console.log(err)
-          })
-        })
+        let courseAddress = await Web3Service.buyCourse(12845837497172512)
+        console.log(courseAddress)
     }
 
     return(
