@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Web3 from "web3";
-import { COUSE_MANAGER_ABI, COUSE_MANAGER_ADDRESS } from "../constants"
+import { COUSE_MANAGER_ABI, COUSE_MANAGER_ADDRESS,COURSE_ABI } from "../constants"
 import bigInt from 'big-integer';
 const Web3Service = {
 
@@ -54,6 +54,7 @@ const Web3Service = {
         return new web3.eth.Contract(COUSE_MANAGER_ABI, COUSE_MANAGER_ADDRESS);
       },
 
+
       deployCourse: async function(id, priceInWei) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -77,17 +78,68 @@ const Web3Service = {
             }
         });
     },
-    
 
-      getCourse: async function(){
+
+      getCourseOwner: async function(id) {
         const contract = await this.getCourseManager();
-        const address = await this.getAccount()
-        contract.methods.getCourse(address,100)
-        .call()
-        .then((res) => {
-            console.log(res);
-      })
+        return contract.methods.getOwnerByCourseId(id.toString())
+          .call();
+      },
+      getCourse: async function(id) {
+        try {
+          const web3 = await this.connectToMetaMask()
+          const ownerAddress = await this.getCourseOwner(id);
+          const contract = await this.getCourseManager();
+          const course = await contract.methods.getCourse(ownerAddress.toString(), id.toString())
+            .call();
+            return new web3.eth.Contract(COURSE_ABI, course);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      },
+      getCourseAddress: async function(id){
+          const ownerAddress = await this.getCourseOwner(id);
+          const contract = await this.getCourseManager();
+          const course = await contract.methods.getCourse(ownerAddress.toString(), id.toString()).call()
+          return course
+      },
+
+      getCoursePriceInWei: async function(id){
+        const contract = await this.getCourse(id);
+        const price = await contract.methods.getCoursePriceInWei()
+            .call();
+        return price
+      },
+
+      checkIfUserPurchased: async function(id){
+        const contract = await this.getCourse(id);
+        const senderAddress =await this.getAccount()
+        console.log(senderAddress)
+        const isPurchased = await contract.methods.checkIfUserPurchased(senderAddress.toString())
+        .call();
+        return isPurchased
+      },
+
+      buyCourse: async function(id){
+        try {
+        const isPurchased =await this.checkIfUserPurchased(id)
+        if(isPurchased) return
+        const web3 = await this.connectToMetaMask()
+        const senderAddress =await this.getAccount();
+        const coursePriceInWei=await this.getCoursePriceInWei(id)
+        const courseAddress = await this.getCourseAddress(id)
+        console.log(coursePriceInWei)
+        web3.eth.sendTransaction({
+            from: senderAddress,
+            to: courseAddress,
+            value: coursePriceInWei
+        });
+    } catch (error) {
+        console.error("Error:", error);
       }
+      }
+
+      
 }
 
 export default Web3Service;
