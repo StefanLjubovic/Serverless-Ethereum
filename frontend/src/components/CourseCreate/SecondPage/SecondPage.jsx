@@ -14,6 +14,7 @@ function SecondPage({id}) {
   }
 
   useEffect(()=>{
+    console.log(course)
     if(id != ""){
       CourseService.GetById(id).then(resp=>{
         setCourse(resp.data)
@@ -35,6 +36,9 @@ function SecondPage({id}) {
           Name: newSectionName,
           Videos: []
         };
+        if(course.Sections === null){
+          course.Sections = []
+        }
         
         course.Sections = [...course.Sections, newSection];
               setNewSectionName('');
@@ -58,7 +62,7 @@ function SecondPage({id}) {
           <button className='add' onClick={addSection}>Add</button>
         </div>
       </div>
-      {course !== null && course !== undefined && course.Sections !== undefined && (
+      {course !== null && course !== undefined && course.Sections !== undefined && course.Sections !== null && (
         <div className='dropdown'>
           {course.Sections.map((item, index) => (
             <DropdownCreate key={index} section={item} id={id}/>
