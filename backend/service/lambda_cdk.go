@@ -2,6 +2,8 @@ package service
 
 import (
 	"encoding/json"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awscognito"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsdynamodb"
@@ -16,11 +18,11 @@ import (
 
 const getCoursesDir = "../lambdas"
 
-func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTable awsdynamodb.Table, s3_images_bucket awss3.Bucket) {
+func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTable awsdynamodb.Table, s3ImagesBucket awss3.Bucket, userPool awscognito.UserPool) {
 
 	// userService := NewUserHandler(usersTable)
 
-	coursesService := NewCoursesHandler(*s3_images_bucket.BucketName())
+	coursesService := NewCoursesHandler(*s3ImagesBucket.BucketName())
 
 	serviceJSON, err := json.Marshal(coursesService)
 	if err != nil {
@@ -74,6 +76,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
 		Integration: coursesFunctionIntg2})
 
+	// UPLOAD OBJECT
 	coursesFunction3 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("upload_object"),
 		&awscdklambdagoalpha.GoFunctionProps{
 			Runtime:     awslambda.Runtime_GO_1_X(),
@@ -88,8 +91,9 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
 		Integration: coursesFunctionIntg3})
 
-	s3_images_bucket.GrantReadWrite(coursesFunction3, true)
+	s3ImagesBucket.GrantReadWrite(coursesFunction3, true)
 
+	// CREATE COURSE
 	coursesFunction4 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("create_course"),
 		&awscdklambdagoalpha.GoFunctionProps{
 			Runtime:     awslambda.Runtime_GO_1_X(),
@@ -106,6 +110,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 
 	coursesTable.GrantWriteData(coursesFunction4)
 
+	// COURSE CONTRACT
 	coursesFunction5 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("course_contract"),
 		&awscdklambdagoalpha.GoFunctionProps{
 			Runtime:     awslambda.Runtime_GO_1_X(),
@@ -120,6 +125,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
 		Integration: coursesFunctionIntg5})
 
+	// ADD SECTION
 	coursesFunction6 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("add_section"),
 		&awscdklambdagoalpha.GoFunctionProps{
 			Runtime:     awslambda.Runtime_GO_1_X(),
@@ -136,6 +142,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 
 	coursesTable.GrantReadWriteData(coursesFunction6)
 
+	// ADD VIDEO
 	coursesFunction7 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("add_video"),
 		&awscdklambdagoalpha.GoFunctionProps{
 			Runtime:     awslambda.Runtime_GO_1_X(),
@@ -151,4 +158,30 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 		Integration: coursesFunctionIntg7})
 
 	coursesTable.GrantReadWriteData(coursesFunction7)
+
+	// SIGN UP
+	usersFunction := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("sign_up"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Environment: &map[string]*string{"USERS_SERVICE": aws.String(string(serviceJSON))},
+			Entry:       jsii.String("../lambdas/sign_up")})
+
+	usersFunction.AddToRolePolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions: &[]*string{
+			jsii.String("cognito-idp:SignUp"),
+			jsii.String("cognito-idp:AdminAddUserToGroup"),
+		},
+		Resources: &[]*string{userPool.UserPoolArn()},
+	}))
+
+	usersTable.GrantWriteData(usersFunction)
+
+	usersFunctionIntg := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("users-function-integration"), usersFunction, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/users"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
+		Integration: usersFunctionIntg,
+	})
 }

@@ -1,13 +1,12 @@
 package service
 
 import (
-	"fmt"
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awscognito"
 	"github.com/aws/jsii-runtime-go"
 )
 
-func DefineCognitoUserPool(stack *awscdk.Stack) {
+func CreateUserPool(stack *awscdk.Stack) *awscognito.UserPool {
 	userPool := awscognito.NewUserPool(*stack, jsii.String("ethereum-user-pool"), &awscognito.UserPoolProps{
 		UserPoolName:        jsii.String("ethereum-user-pool"),
 		SignInCaseSensitive: jsii.Bool(false),
@@ -24,5 +23,5 @@ func DefineCognitoUserPool(stack *awscdk.Stack) {
 		//},
 	})
 
-	fmt.Print(userPool.PhysicalName())
+	return &userPool
 }
