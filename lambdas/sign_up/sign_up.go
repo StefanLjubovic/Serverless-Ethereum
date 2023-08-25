@@ -14,7 +14,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 )
 
 var userService service.UsersService
@@ -45,13 +44,13 @@ func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.AP
 	}
 
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigFiles: nil,
+		SharedConfigState: session.SharedConfigEnable,
 	}))
 
 	cognitoClient := cognitoidentityprovider.New(sess)
 
 	signUpInput := cognitoidentityprovider.SignUpInput{
-		ClientId: aws.String(strconv.FormatUint(uint64(body.ID), 10)),
+		ClientId: aws.String("66f45h8gfjrqvl2jr2dnvn3dhl"),
 		Username: &body.Username,
 		Password: &body.Password,
 		UserAttributes: []*cognitoidentityprovider.AttributeType{
