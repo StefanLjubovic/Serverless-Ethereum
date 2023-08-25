@@ -12,15 +12,21 @@ func CreateUserPool(stack *awscdk.Stack) *awscognito.UserPool {
 		SignInCaseSensitive: jsii.Bool(false),
 		UserVerification: &awscognito.UserVerificationConfig{
 			EmailSubject: jsii.String("Verify your email"),
-			EmailStyle:   awscognito.VerificationEmailStyle_CODE,
+			EmailStyle:   awscognito.VerificationEmailStyle_LINK,
+		},
+		AutoVerify: &awscognito.AutoVerifiedAttrs{
+			Email: jsii.Bool(true),
 		},
 		//SignInAliases: &awscognito.SignInAliases{
 		//	Username: jsii.Bool(true),
 		//	Email:    jsii.Bool(true),
 		//},
-		//AutoVerify: &awscognito.AutoVerifiedAttrs{
-		//	Email: jsii.Bool(true),
-		//},
+	})
+
+	userPool.AddDomain(jsii.String("my-domain"), &awscognito.UserPoolDomainOptions{
+		CognitoDomain: &awscognito.CognitoDomainOptions{
+			DomainPrefix: jsii.String("ethereum-app"),
+		},
 	})
 
 	return &userPool
