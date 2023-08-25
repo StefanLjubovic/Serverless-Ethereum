@@ -187,4 +187,29 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
 		Integration: usersFunctionIntg,
 	})
+
+	// SIGN IN
+	signInFunction := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("sign_in"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Environment: &map[string]*string{"USERS_SERVICE": aws.String(string(userServiceJson))},
+			Entry:       jsii.String("../lambdas/sign_in")})
+
+	signInFunction.AddToRolePolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{
+		Actions: &[]*string{
+			jsii.String("cognito-idp:InitiateAuth"),
+		},
+		Resources: &[]*string{userPool.UserPoolArn()},
+	}))
+
+	usersTable.GrantWriteData(usersFunction)
+
+	signInFunctionIntg := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("sign-in-function-integration"), signInFunction, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/users/login"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
+		Integration: signInFunctionIntg,
+	})
 }

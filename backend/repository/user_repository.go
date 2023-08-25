@@ -34,7 +34,6 @@ func (userRepository *UsersDynamoDBStore) Save(dto dto.UserCreate) error {
 		"surname":  &types.AttributeValueMemberS{Value: dto.Surname},
 		"username": &types.AttributeValueMemberS{Value: dto.Username},
 		"email":    &types.AttributeValueMemberS{Value: dto.Email},
-		"password": &types.AttributeValueMemberS{Value: dto.Password},
 		"image":    &types.AttributeValueMemberS{Value: ""},
 	}
 
