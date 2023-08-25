@@ -40,7 +40,9 @@ func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.AP
 	var body dto.UserCreate
 	err := json.Unmarshal([]byte(req.Body), &body)
 	if err != nil {
-		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusBadRequest}, nil
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: http.StatusBadRequest,
+		}, nil
 	}
 
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
