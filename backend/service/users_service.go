@@ -1,11 +1,11 @@
 package service
 
 import (
+	"backend/dto"
 	model "backend/model"
+	"backend/repository"
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/aws/jsii-runtime-go"
 
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -17,16 +17,19 @@ import (
 type UsersService struct {
 	DynamoDbClient *dynamodb.Client
 	TableName      string
+	UserRepository repository.UsersDynamoDBStore
 }
 
 func NewUserHandler() *UsersService {
-	sdkConfig, err := config.LoadDefaultConfig(context.TODO())
-	if err != nil {
-		log.Fatalf("unable to load SDK config, %v", err)
-	}
+	//sdkConfig, err := config.LoadDefaultConfig(context.TODO())
+	//if err != nil {
+	//	log.Fatalf("unable to load SDK config, %v", err)
+	//}
+	repository := repository.NewUsersDBStore("User")
 	return &UsersService{
 		TableName:      "User",
-		DynamoDbClient: dynamodb.NewFromConfig(sdkConfig),
+		DynamoDbClient: nil,
+		UserRepository: *repository,
 	}
 
 }
@@ -57,6 +60,10 @@ func (usersService *UsersService) GetUserByUsername(username string) (*model.Use
 		panic(fmt.Sprintf("Failed to unmarshal Record, %v", err))
 	}
 	return &user, nil
+}
+
+func (usersService *UsersService) Save(dto dto.UserCreate) error {
+	return usersService.UserRepository.Save(dto)
 }
 
 // func (usersService *UsersService) AddUserCourse(username string, id uint64) error {

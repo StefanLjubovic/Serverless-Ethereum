@@ -23,11 +23,13 @@ func NewBackendStack(scope constructs.Construct, id string, props *BackendStackP
 	}
 	stack := awscdk.NewStack(scope, &id, &sprops)
 
+	// service.DefineCognitoUserPool(&stack)
 	service.DefineS3Bucket(&stack)
 	usersTable := service.CreateUsersTable(&stack)
 	coursesTable := service.CreateCourseTable(&stack)
-	s3_images_bucket := service.CreateCourseBucket(&stack)
-	service.DefineLambdas(&stack, *usersTable, *coursesTable, *s3_images_bucket)
+	s3ImagesBucket := service.CreateCourseBucket(&stack)
+	userPool := service.CreateUserPool(&stack)
+	service.DefineLambdas(&stack, *usersTable, *coursesTable, *s3ImagesBucket, *userPool)
 	return stack
 }
 
