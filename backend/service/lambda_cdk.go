@@ -20,10 +20,13 @@ const getCoursesDir = "../lambdas"
 
 func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTable awsdynamodb.Table, s3ImagesBucket awss3.Bucket, userPool awscognito.UserPool) {
 
-	// userService := NewUserHandler(usersTable)
+	userService := NewUserHandler()
+	userServiceJson, err := json.Marshal(userService)
+	if err != nil {
+		return
+	}
 
 	coursesService := NewCoursesHandler(*s3ImagesBucket.BucketName())
-
 	serviceJSON, err := json.Marshal(coursesService)
 	if err != nil {
 		return
@@ -163,7 +166,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 	usersFunction := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("sign_up"),
 		&awscdklambdagoalpha.GoFunctionProps{
 			Runtime:     awslambda.Runtime_GO_1_X(),
-			Environment: &map[string]*string{"USERS_SERVICE": aws.String(string(serviceJSON))},
+			Environment: &map[string]*string{"USERS_SERVICE": aws.String(string(userServiceJson))},
 			Entry:       jsii.String("../lambdas/sign_up")})
 
 	usersFunction.AddToRolePolicy(awsiam.NewPolicyStatement(&awsiam.PolicyStatementProps{

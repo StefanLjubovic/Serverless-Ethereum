@@ -29,15 +29,13 @@ func (userRepository *UsersDynamoDBStore) Save(dto dto.UserCreate) error {
 		return err
 	}
 	item := map[string]types.AttributeValue{
-		"id":              &types.AttributeValueMemberN{Value: strconv.FormatUint(uint64(dto.ID), 10)},
-		"name":            &types.AttributeValueMemberS{Value: dto.Name},
-		"surname":         &types.AttributeValueMemberS{Value: dto.Surname},
-		"username":        &types.AttributeValueMemberS{Value: dto.Username},
-		"email":           &types.AttributeValueMemberS{Value: dto.Email},
-		"password":        &types.AttributeValueMemberS{Value: dto.Password},
-		"image":           nil,
-		"users_courses":   nil,
-		"created_courses": nil,
+		"id":       &types.AttributeValueMemberN{Value: strconv.FormatUint(uint64(dto.ID), 10)},
+		"name":     &types.AttributeValueMemberS{Value: dto.Name},
+		"surname":  &types.AttributeValueMemberS{Value: dto.Surname},
+		"username": &types.AttributeValueMemberS{Value: dto.Username},
+		"email":    &types.AttributeValueMemberS{Value: dto.Email},
+		"password": &types.AttributeValueMemberS{Value: dto.Password},
+		"image":    &types.AttributeValueMemberS{Value: ""},
 	}
 
 	input := &dynamodb.PutItemInput{
