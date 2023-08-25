@@ -114,9 +114,22 @@ export const COUSE_MANAGER_ABI =[
     {
       "inputs": [
         {
-          "internalType": "address",
+          "internalType": "string",
+          "name": "username",
+          "type": "string"
+        }
+      ],
+      "name": "purchaseCourse",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
           "name": "sender",
-          "type": "address"
+          "type": "string"
         }
       ],
       "name": "checkIfUserPurchased",
@@ -128,19 +141,6 @@ export const COUSE_MANAGER_ABI =[
         }
       ],
       "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        }
-      ],
-      "name": "payInTokens",
-      "outputs": [],
-      "stateMutability": "payable",
       "type": "function"
     },
     {

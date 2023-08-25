@@ -120,19 +120,23 @@ const Web3Service = {
         return isPurchased
       },
 
-      buyCourse: async function(id){
+      buyCourse: async function(id,username){
         try {
-        const isPurchased =await this.checkIfUserPurchased(id)
-        if(isPurchased) return
-        const web3 = await this.connectToMetaMask()
         const senderAddress =await this.getAccount();
         const coursePriceInWei=await this.getCoursePriceInWei(id)
-        const courseAddress = await this.getCourseAddress(id)
-        console.log(coursePriceInWei)
-        web3.eth.sendTransaction({
+        const course= await this.getCourse(id)
+        console.log("###########################")
+        console.log(username)
+        course.methods.purchaseCourse(username)
+        .send({
             from: senderAddress,
-            to: courseAddress,
-            value: coursePriceInWei
+            value: coursePriceInWei,
+        })
+        .then((receipt) => {
+          console.log('Transaction receipt:', receipt);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
         });
     } catch (error) {
         console.error("Error:", error);

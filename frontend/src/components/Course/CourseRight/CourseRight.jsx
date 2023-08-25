@@ -10,8 +10,7 @@ function CourseRight(){
 
     async function buyCourse() {
         
-        let courseAddress = await Web3Service.buyCourse(12845837497172512)
-        console.log(courseAddress)
+        await Web3Service.buyCourse(12845837497172512,"Stefan")
     }
 
     return(

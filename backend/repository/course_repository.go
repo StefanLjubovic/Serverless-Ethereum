@@ -47,6 +47,7 @@ func (coursesRepository *CoursesDynamoDBStore) GetAllCourses() (*[]model.Course,
 		// Access individual attributes of each item
 		err = attributevalue.UnmarshalMap(item, &course)
 		if err != nil {
+			fmt.Println(err)
 			return nil, err
 		}
 		courses = append(courses, course)
