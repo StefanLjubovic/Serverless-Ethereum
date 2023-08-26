@@ -69,7 +69,7 @@ export const COUSE_MANAGER_ABI =[
   }
 ]
 
-  export const COUSE_MANAGER_ADDRESS = "0xb64f4fb25cffc913832b5b4d3733a34a07ea8ee0"
+  export const COUSE_MANAGER_ADDRESS = "0xc95b71f2dbaf13b53673b1a5bcb73877fc2579e1"
 
 
   export const COURSE_ABI = [

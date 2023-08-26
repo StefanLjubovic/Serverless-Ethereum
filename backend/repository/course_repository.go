@@ -44,11 +44,9 @@ func (coursesRepository *CoursesDynamoDBStore) GetAllCourses() (*[]model.Course,
 	var courses []model.Course
 	for _, item := range result.Items {
 		var course model.Course
-		// Access individual attributes of each item
 		err = attributevalue.UnmarshalMap(item, &course)
 		if err != nil {
-			fmt.Println(err)
-			return nil, err
+			continue
 		}
 		courses = append(courses, course)
 	}
@@ -93,8 +91,12 @@ func (coursesRepository *CoursesDynamoDBStore) Save(ethPrice float64, dto dto.Co
 		"id":          &types.AttributeValueMemberN{Value: strconv.FormatUint(uint64(dto.ID), 10)},
 		"name":        &types.AttributeValueMemberS{Value: dto.Name},
 		"description": &types.AttributeValueMemberS{Value: dto.Description},
-		"certificate": &types.AttributeValueMemberS{Value: dto.Certificate},
-		"image":       &types.AttributeValueMemberS{Value: dto.Image},
+		"certificate": &types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
+			"name":        &types.AttributeValueMemberS{Value: dto.Certificate.Name},
+			"description": &types.AttributeValueMemberS{Value: dto.Certificate.Description},
+			"image_path":  &types.AttributeValueMemberS{Value: dto.Certificate.ImagePath},
+		}},
+		"image": &types.AttributeValueMemberS{Value: dto.Image},
 		"price": &types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
 			"price_usd": &types.AttributeValueMemberN{Value: strconv.FormatFloat(dto.PriceUSD, 'f', -1, 64)},
 			"price_eth": &types.AttributeValueMemberN{Value: strconv.FormatFloat(ethPrice, 'f', -1, 64)},

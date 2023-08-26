@@ -14,7 +14,7 @@ function Navbar() {
     return (
         <div className="navigation">
             <div>
-                 <img src={Logo} className="logo" alt="Logo" />
+                 <img src={Logo} className="logo" alt="Logo" onClick={()=>navigate('')}/>
             </div>
             <div>
                 <div className="search"> 

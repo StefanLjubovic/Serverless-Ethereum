@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+
 	"github.com/aws/aws-cdk-go/awscdk/v2/awscognito"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsiam"
 
@@ -28,6 +29,11 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 
 	coursesService := NewCoursesHandler(*s3ImagesBucket.BucketName())
 	serviceJSON, err := json.Marshal(coursesService)
+	if err != nil {
+		return
+	}
+
+	usersServiceJSON, err := json.Marshal(userService)
 	if err != nil {
 		return
 	}
@@ -212,4 +218,22 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
 		Integration: signInFunctionIntg,
 	})
+
+	// GET USER COURSES
+	coursesFunction8 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("get_users_courses"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Environment: &map[string]*string{"USERS+_SERVICE": aws.String(string(usersServiceJSON))},
+			Entry:       jsii.String("../lambdas/get_users_courses")})
+
+	coursesFunctionIntg8 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("courses-function-integration"), coursesFunction8, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/users/courses"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
+		Integration: coursesFunctionIntg8})
+
+	usersTable.GrantReadWriteData(coursesFunction8)
+	coursesTable.GrantReadWriteData(coursesFunction8)
 }

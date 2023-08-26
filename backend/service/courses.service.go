@@ -16,15 +16,18 @@ type CoursesService struct {
 	DynamoDbClient   *dynamodb.Client
 	S3ImageService   S3ImageServiceImpl
 	CourseRepository repository.CoursesDynamoDBStore
+	UsersReposiotry  repository.UsersDynamoDBStore
 }
 
 func NewCoursesHandler(bucketName string) *CoursesService {
 	s3Service := NewS3ClientService(bucketName)
+	usersRepository := repository.NewUsersDBStore("User")
 	repository := repository.NewCoursesDBStore("Course")
 	return &CoursesService{
 		CourseRepository: *repository,
 		DynamoDbClient:   nil,
 		S3ImageService:   *s3Service,
+		UsersReposiotry:  *usersRepository,
 	}
 }
 

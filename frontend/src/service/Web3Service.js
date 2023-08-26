@@ -1,7 +1,5 @@
-import axios from 'axios';
 import Web3 from "web3";
 import { COUSE_MANAGER_ABI, COUSE_MANAGER_ADDRESS,COURSE_ABI } from "../constants"
-import bigInt from 'big-integer';
 const Web3Service = {
 
     connectToMetaMask: async function() {
@@ -111,37 +109,37 @@ const Web3Service = {
         return price
       },
 
-      checkIfUserPurchased: async function(id){
+      checkIfUserPurchased: async function(id,username){
         const contract = await this.getCourse(id);
-        const senderAddress =await this.getAccount()
-        console.log(senderAddress)
-        const isPurchased = await contract.methods.checkIfUserPurchased(senderAddress.toString())
+        const isPurchased = await contract.methods.checkIfUserPurchased(username)
         .call();
         return isPurchased
       },
 
-      buyCourse: async function(id,username){
+      buyCourse: async function(id, username) {
         try {
-        const senderAddress =await this.getAccount();
-        const coursePriceInWei=await this.getCoursePriceInWei(id)
-        const course= await this.getCourse(id)
-        console.log("###########################")
-        console.log(username)
-        course.methods.purchaseCourse(username)
-        .send({
-            from: senderAddress,
-            value: coursePriceInWei,
-        })
-        .then((receipt) => {
-          console.log('Transaction receipt:', receipt);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    } catch (error) {
-        console.error("Error:", error);
-      }
-      }
+            const senderAddress = await this.getAccount();
+            const coursePriceInWei = await this.getCoursePriceInWei(id);
+            const course = await this.getCourse(id);
+            console.log(senderAddress)
+            console.log(coursePriceInWei)
+            console.log(course)
+            console.log(username)
+            await course.methods.purchaseCourse(username)
+                .send({
+                    from: senderAddress,
+                    value: coursePriceInWei,
+                })
+                .then((receipt) => {
+                    console.log('Transaction receipt:', receipt);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
 
       
 }

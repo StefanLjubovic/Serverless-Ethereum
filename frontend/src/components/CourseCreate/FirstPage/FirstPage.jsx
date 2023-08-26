@@ -20,6 +20,8 @@ function FirstPage({onPageChange }) {
   const certInput = useRef(document.createElement("cert-input"));
   const [name,setName] = useState("")
   const [description,setDescription] = useState("")
+  const [certName,setCertName] = useState("")
+  const [certDescription,setCertDescription] = useState("")
   const [price,setPrice] = useState('')
 
   function uploadPhoto(event) {
@@ -91,7 +93,11 @@ function FirstPage({onPageChange }) {
                         description: description,
                         price_usd: Number(price),
                         image: "path1",
-                        certificate: "path2"
+                        certificate: {
+                          name : certName,
+                          description : certDescription,
+                          image_path : ""
+                        }
                     };
                     console.log(course)
         
@@ -132,8 +138,8 @@ function FirstPage({onPageChange }) {
         <div className='image'>
           <label>Course certificate 🧑‍🎓</label>
           <div className='cert-inputs'>
-          <input type="text" name="cert-name" placeholder='Name' className='name'/>
-          <input type="text" name="cert-desc" placeholder='Descrpition' className='price'/>
+          <input type="text" name="cert-name" placeholder='Name' className='name'  value={certName} onChange={(e) => setCertName(e.target.value)}/>
+          <input type="text" name="cert-desc" placeholder='Descrpition' className='price' value={certDescription} onChange={(e) => setCertDescription(e.target.value)}/>
           </div>
           {
         certPath == '' ?

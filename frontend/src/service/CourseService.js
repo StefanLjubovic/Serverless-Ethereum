@@ -49,6 +49,15 @@ const CourseService = {
                 Accept: 'application/json',
             }
         });
+    },
+
+    GetAllCourses: function(){
+        return axios.get(this.baseURL + 'courses'  , {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }
+        });
     }
 
     

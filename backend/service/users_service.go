@@ -6,6 +6,9 @@ import (
 	"backend/repository"
 	"context"
 	"fmt"
+	"strconv"
+	"time"
+
 	"github.com/aws/jsii-runtime-go"
 
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -15,21 +18,20 @@ import (
 )
 
 type UsersService struct {
-	DynamoDbClient *dynamodb.Client
-	TableName      string
-	UserRepository repository.UsersDynamoDBStore
+	DynamoDbClient    *dynamodb.Client
+	TableName         string
+	UserRepository    repository.UsersDynamoDBStore
+	CoursesRepository repository.CoursesDynamoDBStore
 }
 
 func NewUserHandler() *UsersService {
-	//sdkConfig, err := config.LoadDefaultConfig(context.TODO())
-	//if err != nil {
-	//	log.Fatalf("unable to load SDK config, %v", err)
-	//}
+	coursesRepository := repository.NewCoursesDBStore("Course")
 	repository := repository.NewUsersDBStore("User")
 	return &UsersService{
-		TableName:      "User",
-		DynamoDbClient: nil,
-		UserRepository: *repository,
+		TableName:         "User",
+		DynamoDbClient:    nil,
+		UserRepository:    *repository,
+		CoursesRepository: *coursesRepository,
 	}
 
 }
@@ -66,44 +68,74 @@ func (usersService *UsersService) Save(dto dto.UserCreate) error {
 	return usersService.UserRepository.Save(dto)
 }
 
-// func (usersService *UsersService) AddUserCourse(username string, id uint64) error {
-// 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
-// 	if err != nil {
-// 		fmt.Println("Failed to make configuration: ", err)
-// 		return err
-// 	}
-// 	user, err := usersService.GetUserByUsername(username)
-// 	user.CreatedCourses = append(user.CreatedCourses, uint(id))
-// 	if err != nil {
-// 		fmt.Println("Failed to find user: ", err)
-// 		return err
-// 	}
+func (usersService *UsersService) AddUsersCourse(username string, courseId int) error {
 
-// 	usersService.DynamoDbClient = dynamodb.NewFromConfig(cfg)
+	usersCourse := model.UsersCourse{
+		Course:          courseId,
+		LastTimeWatched: time.Now(),
+	}
+	user, err := usersService.UserRepository.GetByUsername(username)
+	if err != nil {
+		return err
+	}
+	user.UsersCourses = append(user.UsersCourses, usersCourse)
+	err = usersService.UserRepository.UpdateUsersCourses(user.ID, &user.UsersCourses)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
-// 	courseList := make([]types.AttributeValue, len(user.CreatedCourses))
-// 	for _, id := range user.CreatedCourses {
-// 		idStr := strconv.FormatUint(uint64(id), 10)
-// 		courseList = append(courseList, &types.AttributeValueMemberS{Value: idStr})
-// 	}
+func (usersService *UsersService) GetUsersCourses(username string) (*[]dto.CourseLastTimeWatched, error) {
 
-// 	updateInput := &dynamodb.UpdateItemInput{
-// 		TableName: aws.String(usersService.TableName),
-// 		Key: map[string]types.AttributeValue{
-// 			"username": &types.AttributeValueMemberS{Value: username},
-// 		},
-// 		UpdateExpression: aws.String("SET created_courses = :courses"),
-// 		ExpressionAttributeValues: map[string]types.AttributeValue{
-// 			":courses": &types.AttributeValueMemberL{Value: courseList},
-// 		},
-// 	}
+	user, err := usersService.UserRepository.GetByUsername(username)
+	if err != nil {
+		return nil, err
+	}
+	sortedUsersCourses := mergeSort(user.UsersCourses)
+	courses := []dto.CourseLastTimeWatched{}
+	for _, c := range sortedUsersCourses {
+		course, err := usersService.CoursesRepository.GetCourseById(strconv.FormatUint(uint64(c.Course), 10))
+		if err != nil {
+			return nil, err
+		}
+		temp := dto.CourseLastTimeWatched{
+			Course:          *course,
+			LastTimeWatched: c.LastTimeWatched,
+		}
+		courses = append(courses, temp)
+	}
+	return &courses, nil
+}
 
-// 	_, err = usersService.DynamoDbClient.UpdateItem(context.TODO(), updateInput)
-// 	if err != nil {
-// 		fmt.Println("Error updating user item: ", err)
-// 		return err
-// 	}
+func mergeSort(usersCourses []model.UsersCourse) []model.UsersCourse {
 
-// 	fmt.Println("Course added to user successfully.")
-// 	return nil
-// }
+	if len(usersCourses) < 2 {
+		return usersCourses
+	}
+	first := mergeSort(usersCourses[:len(usersCourses)/2])
+	second := mergeSort(usersCourses[len(usersCourses)/2:])
+	return merge(first, second)
+}
+
+func merge(a []model.UsersCourse, b []model.UsersCourse) []model.UsersCourse {
+	final := []model.UsersCourse{}
+	i := 0
+	j := 0
+	for i < len(a) && j < len(b) {
+		if a[i].LastTimeWatched.After(b[j].LastTimeWatched) {
+			final = append(final, a[i])
+			i++
+		} else {
+			final = append(final, b[j])
+			j++
+		}
+	}
+	for ; i < len(a); i++ {
+		final = append(final, a[i])
+	}
+	for ; j < len(b); j++ {
+		final = append(final, b[j])
+	}
+	return final
+}

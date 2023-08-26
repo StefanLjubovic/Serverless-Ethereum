@@ -20,6 +20,7 @@
     width: 4rem;
     height: 2.5rem;
     object-fit: cover;
+    cursor: pointer;
 }
 
 .navigation > :nth-child(2) {

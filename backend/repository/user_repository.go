@@ -2,13 +2,16 @@ package repository
 
 import (
 	"backend/dto"
+	"backend/model"
 	"context"
 	"fmt"
+	"strconv"
+
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/aws/aws-sdk-go/aws"
-	"strconv"
 )
 
 type UsersDynamoDBStore struct {
@@ -48,6 +51,91 @@ func (userRepository *UsersDynamoDBStore) Save(dto dto.UserCreate) error {
 	}
 
 	return nil
+}
+
+func (userRepository *UsersDynamoDBStore) GetByUsername(username string) (*model.User, error) {
+	err := userRepository.GetDBClient()
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	input := &dynamodb.GetItemInput{
+		TableName: aws.String(userRepository.TableName),
+		Key: map[string]types.AttributeValue{
+			"Username": &types.AttributeValueMemberS{Value: username},
+		},
+	}
+
+	result, err := userRepository.DynamoDbClient.GetItem(context.TODO(), input)
+	if err != nil {
+		fmt.Println("Failed to get course: ", err)
+		return nil, err
+	}
+
+	user := new(model.User)
+	err = attributevalue.UnmarshalMap(result.Item, user)
+	if err != nil {
+		fmt.Println("Failed to unmarshal course")
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (userRepository *UsersDynamoDBStore) UpdateUsersCourses(id string, usersCourses *[]model.UsersCourse) error {
+	courseList, err := attributevalue.MarshalList(usersCourses)
+	if err != nil {
+		return err
+	}
+
+	updateInput := &dynamodb.UpdateItemInput{
+		TableName: aws.String(userRepository.TableName),
+		Key: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberS{Value: id},
+		},
+		UpdateExpression: aws.String("SET users_courses = :users_courses"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":users_courses": &types.AttributeValueMemberL{Value: courseList},
+		},
+	}
+
+	_, err = userRepository.DynamoDbClient.UpdateItem(context.TODO(), updateInput)
+
+	if err != nil {
+		fmt.Println("Error updating course item: ", err)
+		return err
+	}
+
+	return nil
+}
+
+func (userRepository *UsersDynamoDBStore) GetUserCourses(username string) (*[]model.UsersCourse, error) {
+	err := userRepository.GetDBClient()
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	input := &dynamodb.GetItemInput{
+		TableName: aws.String(userRepository.TableName),
+		Key: map[string]types.AttributeValue{
+			"Username": &types.AttributeValueMemberS{Value: username},
+		},
+	}
+
+	result, err := userRepository.DynamoDbClient.GetItem(context.TODO(), input)
+	if err != nil {
+		fmt.Println("Failed to get course: ", err)
+		return nil, err
+	}
+
+	user := new(model.User)
+	err = attributevalue.UnmarshalMap(result.Item, user)
+	if err != nil {
+		fmt.Println("Failed to unmarshal course")
+		return nil, err
+	}
+
+	return &user.UsersCourses, nil
 }
 
 func (userRepository *UsersDynamoDBStore) GetDBClient() error {

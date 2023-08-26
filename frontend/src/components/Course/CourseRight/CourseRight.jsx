@@ -10,7 +10,7 @@ function CourseRight(){
 
     async function buyCourse() {
         
-        await Web3Service.buyCourse(12845837497172512,"Stefan")
+        await Web3Service.buyCocurse(12879125347402718,"Stefan")
     }
 
     return(

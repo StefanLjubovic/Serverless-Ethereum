@@ -5,6 +5,7 @@ import "./Course.sol";
 
 contract CourseManager {
     mapping(address => mapping(uint => address)) courses;
+    
     mapping(uint => address) private courseOwners;
     constructor(){}
 
