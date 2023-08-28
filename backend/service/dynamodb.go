@@ -45,7 +45,7 @@ func CreateCourseTable(stack *awscdk.Stack) *awsdynamodb.Table {
 			Type: awsdynamodb.AttributeType_NUMBER,
 		},
 		TableName:           jsii.String("Course"),
-		ReadCapacity:        jsii.Number(1),
+		ReadCapacity:        jsii.Number(2),
 		WriteCapacity:       jsii.Number(1),
 		PointInTimeRecovery: jsii.Bool(true),
 	})

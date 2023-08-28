@@ -68,6 +68,20 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
 		Integration: coursesFunctionIntg})
 
+	authorizer := awscdkapigatewayv2alpha.NewHttpAuthorizer(*stack, jsii.String("MyHttpAuthorizer"), &awscdkapigatewayv2alpha.HttpAuthorizerProps{
+		AuthorizerName: jsii.String("MyHttpAuthorizer"),
+		HttpApi:        api,
+		Type:           awscdkapigatewayv2alpha.HttpAuthorizerType_JWT,
+		JwtIssuer:      jsii.String("https://cognito-idp.eu-central-1.amazonaws.com/" + *userPool.UserPoolId()),
+		JwtAudience:    jsii.Strings("3s9evb0dc0qspc503fnbnajgqm"), // Look this up in Cognito Userpool App Client settings. It’s the App client ID.
+		IdentitySource: jsii.Strings("$request.header.Authorization"),
+	})
+
+	httpApiAuthorizer := awscdkapigatewayv2alpha.HttpAuthorizer_FromHttpAuthorizerAttributes(*stack, jsii.String("MyHttpAuthorizer4Test"), &awscdkapigatewayv2alpha.HttpAuthorizerAttributes{
+		AuthorizerId:   authorizer.AuthorizerId(),
+		AuthorizerType: jsii.String("JWT"),
+	})
+
 	// GET COURSE BY ID
 	coursesFunction2 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("get_course_by_id"),
 		&awscdklambdagoalpha.GoFunctionProps{
@@ -83,7 +97,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
 		Path:        jsii.String("/courses/{id}"),
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
-		Integration: coursesFunctionIntg2})
+		Integration: coursesFunctionIntg2, Authorizer: httpApiAuthorizer})
 
 	// UPLOAD OBJECT
 	coursesFunction3 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("upload_object"),
@@ -98,7 +112,8 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
 		Path:        jsii.String("/courses/upload-object"),
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
-		Integration: coursesFunctionIntg3})
+		Integration: coursesFunctionIntg3,
+		Authorizer:  httpApiAuthorizer})
 
 	s3ImagesBucket.GrantReadWrite(coursesFunction3, true)
 
@@ -223,7 +238,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 	coursesFunction8 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("get_users_courses"),
 		&awscdklambdagoalpha.GoFunctionProps{
 			Runtime:     awslambda.Runtime_GO_1_X(),
-			Environment: &map[string]*string{"USERS+_SERVICE": aws.String(string(usersServiceJSON))},
+			Environment: &map[string]*string{"USERS_SERVICE": aws.String(string(usersServiceJSON))},
 			Entry:       jsii.String("../lambdas/get_users_courses")})
 
 	coursesFunctionIntg8 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
@@ -231,7 +246,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 
 	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
 		Path:        jsii.String("/users/courses"),
-		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
 		Integration: coursesFunctionIntg8})
 
 	usersTable.GrantReadWriteData(coursesFunction8)

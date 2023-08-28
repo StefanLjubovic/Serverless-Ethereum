@@ -59,23 +59,30 @@ func (userRepository *UsersDynamoDBStore) GetByUsername(username string) (*model
 		fmt.Println(err)
 		return nil, err
 	}
-	input := &dynamodb.GetItemInput{
-		TableName: aws.String(userRepository.TableName),
-		Key: map[string]types.AttributeValue{
-			"Username": &types.AttributeValueMemberS{Value: username},
-		},
+	keyCondition := "#username = :username"
+	expressionAttributeNames := map[string]string{
+		"#username": "username",
+	}
+	expressionAttributeValues := map[string]types.AttributeValue{
+		":username": &types.AttributeValueMemberS{Value: username},
 	}
 
-	result, err := userRepository.DynamoDbClient.GetItem(context.TODO(), input)
+	input := &dynamodb.QueryInput{
+		TableName:                 aws.String(userRepository.TableName),
+		IndexName:                 aws.String("Username"), // The name of your GSI
+		KeyConditionExpression:    aws.String(keyCondition),
+		ExpressionAttributeNames:  expressionAttributeNames,
+		ExpressionAttributeValues: expressionAttributeValues,
+	}
+
+	result, err := userRepository.DynamoDbClient.Query(context.TODO(), input)
 	if err != nil {
-		fmt.Println("Failed to get course: ", err)
 		return nil, err
 	}
 
 	user := new(model.User)
-	err = attributevalue.UnmarshalMap(result.Item, user)
+	err = attributevalue.UnmarshalMap(result.Items[0], user)
 	if err != nil {
-		fmt.Println("Failed to unmarshal course")
 		return nil, err
 	}
 

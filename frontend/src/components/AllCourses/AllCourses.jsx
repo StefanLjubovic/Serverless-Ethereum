@@ -14,7 +14,11 @@ function AllCourses(){
     useEffect(()=>{
         CourseService.GetAllCourses().then(resp=>{
             console.log(resp.data)
-            setCourses(resp.data)
+            if(resp.data == null){
+                setCourses([])
+            }else{
+                setCourses(resp.data)
+            }
         })
     },[])
 

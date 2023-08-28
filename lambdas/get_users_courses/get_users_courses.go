@@ -5,11 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"lambdas/util"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 var usersService service.UsersService
@@ -17,7 +19,7 @@ var usersService service.UsersService
 func init() {
 	serviceString := os.Getenv("USERS_SERVICE")
 	if serviceString == "" {
-		log.Fatal("Missing environment variable COURSES_SERVICE")
+		log.Fatal("Missing environment variable USERS_SERVICE")
 		return
 	}
 	err := json.Unmarshal([]byte(serviceString), &usersService)
@@ -27,9 +29,16 @@ func init() {
 	}
 }
 
+func main() {
+	lambda.Start(handler)
+}
+
 func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 
-	username := "stefan"
+	username, err := util.ExtractUsername(req)
+	if err != nil {
+		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusUnauthorized}, nil
+	}
 	courses, err := usersService.GetUsersCourses(username)
 	fmt.Println(courses)
 	if err != nil {

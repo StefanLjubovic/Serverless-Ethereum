@@ -117,6 +117,10 @@ func (coursesRepository *CoursesDynamoDBStore) Save(ethPrice float64, dto dto.Co
 
 func (coursesRepository *CoursesDynamoDBStore) UpdateSections(sections []model.Section, courseId int) error {
 
+	err := coursesRepository.GetDBClient()
+	if err != nil {
+		return err
+	}
 	courseList, err := attributevalue.MarshalList(sections)
 	if err != nil {
 		return err

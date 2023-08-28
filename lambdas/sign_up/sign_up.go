@@ -6,14 +6,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
-	"log"
-	"net/http"
-	"os"
 )
 
 var userService service.UsersService
@@ -52,7 +53,7 @@ func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.AP
 	cognitoClient := cognitoidentityprovider.New(sess)
 
 	signUpInput := cognitoidentityprovider.SignUpInput{
-		ClientId: aws.String("66f45h8gfjrqvl2jr2dnvn3dhl"),
+		ClientId: aws.String("3s9evb0dc0qspc503fnbnajgqm"),
 		Username: &body.Username,
 		Password: &body.Password,
 		UserAttributes: []*cognitoidentityprovider.AttributeType{
