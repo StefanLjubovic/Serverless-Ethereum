@@ -68,12 +68,11 @@ function FirstPage({onPageChange }) {
           }
 
           async function save() {
-            if(name === '' || description === '' || price ==='') return
+            if(name === '' || description === '' || price ==='' || certPath == '' || wallpaperPath == '' || certName == '' || certDescription == '') return
             CourseService.DeployCouse(37.02).then(async resp => {
                 console.log(resp.data);
                 let id = resp.data.id
-        
-                // Send the transaction and listen for confirmation
+
                 MySwal.fire({
                   title: 'Waiting response from a server.',
                  html: 'This will take a second.',
@@ -84,28 +83,36 @@ function FirstPage({onPageChange }) {
                  })
                 const receipt = await Web3Service.deployCourse(resp.data.id, resp.data.price_in_wei);
                 MySwal.close();
-                console.log("Transaction receipt:", receipt);
-        
                 if (receipt && receipt.status) {
-                    const course = {
+                let image_path = ''
+                let cert_path = ''
+                console.log("Transaction receipt:", receipt);
+                 ImageService.uploadImage(wallpaperFile).then(resp=>{
+                    image_path = resp.data
+                    console.log(resp.data)
+                    ImageService.uploadImage(certFile).then(resp1=>{
+                      cert_path = resp1.data
+                      console.log(resp1.data)
+                      const course = {
                         id: resp.data.id,
                         name: name,
                         description: description,
                         price_usd: Number(price),
-                        image: "path1",
+                        image: image_path,
                         certificate: {
                           name : certName,
                           description : certDescription,
-                          image_path : ""
+                          image_path : cert_path
                         }
                     };
                     console.log(course)
-        
-                    // Send the SaveCourse transaction and listen for confirmation
                     CourseService.SaveCourse(course).then(async resp3 => {
                         console.log(resp3);
                         onPageChange(id)
                     });
+
+                   })
+                 })
                 }
             });
         }
