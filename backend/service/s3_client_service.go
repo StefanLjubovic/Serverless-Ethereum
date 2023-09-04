@@ -40,7 +40,6 @@ func (store *S3ImageServiceImpl) UploadObject(ctx context.Context, image []byte)
 		Body:   r,
 		Bucket: aws.String(store.BUCKET_NAME),
 		Key:    aws.String(filename.String()),
-		ACL:    aws.String(s3.BucketCannedACLPublicRead),
 	})
 
 	if err != nil {

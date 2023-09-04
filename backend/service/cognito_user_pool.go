@@ -17,15 +17,20 @@ func CreateUserPool(stack *awscdk.Stack) *awscognito.UserPool {
 		AutoVerify: &awscognito.AutoVerifiedAttrs{
 			Email: jsii.Bool(true),
 		},
-		//SignInAliases: &awscognito.SignInAliases{
-		//	Username: jsii.Bool(true),
-		//	Email:    jsii.Bool(true),
-		//},
+		SelfSignUpEnabled: jsii.Bool(true),
 	})
 
 	userPool.AddDomain(jsii.String("my-domain"), &awscognito.UserPoolDomainOptions{
 		CognitoDomain: &awscognito.CognitoDomainOptions{
 			DomainPrefix: jsii.String("ethereum-app"),
+		},
+	})
+
+	userPool.AddClient(jsii.String("my-client"), &awscognito.UserPoolClientOptions{
+		GenerateSecret: jsii.Bool(false),
+		AuthFlows: &awscognito.AuthFlow{
+			UserPassword: jsii.Bool(true),
+			UserSrp:      jsii.Bool(true),
 		},
 	})
 
