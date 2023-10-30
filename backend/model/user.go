@@ -9,4 +9,5 @@ type User struct {
 	UsersCourses   []UsersCourse `dynamodbav:"users_courses"`
 	CreatedCourses []int         `dynamodbav:"created_courses"`
 	Username       string        `dynamodbav:"username"`
+	Certificates   []int         `dynamodbav:"certificates"`
 }

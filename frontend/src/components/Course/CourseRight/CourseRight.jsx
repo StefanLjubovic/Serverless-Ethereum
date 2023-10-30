@@ -4,13 +4,17 @@ import { faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 import Logo from '../../../assets/code.jpg'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons';
 import { useState } from "react";
-import CourseService from "../../../service/CourseService";
-import Web3Service from "../../../service/Web3Service";
-function CourseRight(){
-
+import UsersService from "../../../service/UsersService";
+import Web3Service from "../../../service/Web3Service"
+import { useNavigate } from "react-router-dom";
+function CourseRight({id}){
+    const navigate = useNavigate()
     async function buyCourse() {
-        
-        await Web3Service.buyCocurse(12879125347402718,"Stefan")
+        let bought =await Web3Service.buyCourse(id,"ljubo")
+        console.log(bought)
+            UsersService.AddUserCourse(id).then(resp=>{
+                navigate('/enrolled/'+id)
+        })
     }
 
     return(

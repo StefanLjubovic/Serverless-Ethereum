@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
-function Dropdown(){
+function Dropdown({section, triggerFunction,courseMap}){
+
     const [isOpen, setIsOpen] = useState(false);
-    const items = ['Item 1', 'Item 2', 'Item 3'];
     function toggleDropdown() {
       setIsOpen(!isOpen);
     }
@@ -13,22 +13,29 @@ function Dropdown(){
     function handleCheckboxChange(item) {
       return true
     }
+    function changeVideo(video){
+      triggerFunction(video);
+    }
+    function check(item){
+      return courseMap[item.Name]
+    }
+
     return(
         <div className="dropdown">
-        <div onClick={toggleDropdown} className="btn">Toggle Dropdown
+        <div onClick={toggleDropdown} className="btn">{section.Name}
         <FontAwesomeIcon icon={faChevronDown} className="icon"/>
         </div>
         {isOpen && (
           <div className="dropdown-content">
-            {items.map((item, index) => (
-              <div key={index} className="dropdown-item">
+            {section.Videos.map((item, index) => (
+              <div key={index} className="dropdown-item" onClick={()=>changeVideo(item)}>
                 <input
                 type="checkbox"
-                checked={true}
+                checked={check(item)}
                 onChange={() => handleCheckboxChange(item)}
               />
               <div className="desc">
-                <p className="title">Deploy ERC731 Token From OpenZeppelin As OpenSea NFT on Goerli Using Remix</p>
+                <p className="title">{item.Name}</p>
                 <p className="dur">
                 <FontAwesomeIcon icon={faYoutube} className="icon"/>1 min
                 </p>

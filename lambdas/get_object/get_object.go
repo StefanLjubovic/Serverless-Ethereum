@@ -1,7 +1,6 @@
 package main
 
 import (
-	"backend/dto"
 	"backend/service"
 	"context"
 	"encoding/json"
@@ -17,6 +16,7 @@ import (
 var courseService service.CoursesService
 
 func init() {
+	fmt.Println("Init")
 	serviceString := os.Getenv("COURSES_SERVICE")
 	if serviceString == "" {
 		log.Fatal("Missing environment variable COURSES_SERVICE")
@@ -29,21 +29,22 @@ func init() {
 	}
 }
 
-func main() {
-	lambda.Start(handler)
-}
-
 func handler(ctx context.Context, req events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	var body dto.CourseCreate
-	err := json.Unmarshal([]byte(req.Body), &body)
-	if err != nil {
-		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusBadRequest}, nil
-	}
-	fmt.Println(body)
-	err = courseService.Save(body)
+	param := req.PathParameters["path"]
+	resp, err := courseService.GetObject(param)
 	if err != nil {
 		return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusInternalServerError}, nil
 
 	}
-	return events.APIGatewayV2HTTPResponse{StatusCode: http.StatusCreated}, nil
+	ret, _ := json.Marshal(resp)
+
+	return events.APIGatewayV2HTTPResponse{
+		StatusCode: http.StatusOK,
+		Body:       string(ret),
+	}, nil
+
+}
+
+func main() {
+	lambda.Start(handler)
 }

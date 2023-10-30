@@ -7,7 +7,9 @@ import (
 	"backend/util"
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
@@ -39,12 +41,16 @@ func (coursesService *CoursesService) GetCourseById(id string) (*model.Course, e
 	return coursesService.CourseRepository.GetCourseById(id)
 }
 
-func (coursesService *CoursesService) UploadObject(image []byte) (string, error) {
+func (coursesService *CoursesService) UploadObject(image []byte, filename string) (string, error) {
+	split := strings.Split(filename, ".")
+	ext := split[len(split)-1]
+	fmt.Println(ext)
 	coursesService.S3ImageService.Start(context.TODO())
-	return coursesService.S3ImageService.UploadObject(context.TODO(), image)
+	return coursesService.S3ImageService.UploadObject(context.TODO(), image, ext)
 }
 
 func (coursesService *CoursesService) Save(dto dto.CourseCreate) error {
+	fmt.Println(dto)
 	ethPrice, err := util.ConvertUSDToETH(dto.PriceUSD)
 	if err != nil {
 		return err
@@ -76,6 +82,11 @@ func (coursesService *CoursesService) AddSection(req dto.AddSectionDTO) error {
 	}
 	course.Sections = append(course.Sections, section)
 	return coursesService.CourseRepository.UpdateSections(course.Sections, course.ID)
+}
+
+func (coursesService *CoursesService) GetObject(path string) ([]byte, error) {
+	coursesService.S3ImageService.Start(context.TODO())
+	return coursesService.S3ImageService.GetObject(context.TODO(), path)
 }
 
 func (coursesService *CoursesService) AddVideo(req dto.AddVideoDTO) error {

@@ -15206,12 +15206,12 @@
         }
       },
       "links": {},
-      "address": "0x746eDB81C0d64b98A3821ADE9F285a36b0829178",
-      "transactionHash": "0x477bec6f5a75cb11ec391c9e2f74d39267f9602dbbf681411b0f8957090b4aaf"
+      "address": "0x8fee3d2B55264091Ca68cdD8A47E4E87505f1026",
+      "transactionHash": "0xf0d5ab73d77e8d02d396899681c7cc088146f2d826ccc31a4b15fade466d9e8e"
     }
   },
   "schemaVersion": "3.4.14",
-  "updatedAt": "2023-08-26T08:47:51.357Z",
+  "updatedAt": "2023-10-25T07:11:15.019Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

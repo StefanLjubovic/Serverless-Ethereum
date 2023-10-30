@@ -98,7 +98,7 @@ func (userRepository *UsersDynamoDBStore) UpdateUsersCourses(id string, usersCou
 	updateInput := &dynamodb.UpdateItemInput{
 		TableName: aws.String(userRepository.TableName),
 		Key: map[string]types.AttributeValue{
-			"id": &types.AttributeValueMemberS{Value: id},
+			"id": &types.AttributeValueMemberN{Value: id},
 		},
 		UpdateExpression: aws.String("SET users_courses = :users_courses"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{
@@ -108,6 +108,44 @@ func (userRepository *UsersDynamoDBStore) UpdateUsersCourses(id string, usersCou
 
 	_, err = userRepository.DynamoDbClient.UpdateItem(context.TODO(), updateInput)
 
+	if err != nil {
+		fmt.Println("Error updating course item: ", err)
+		return err
+	}
+
+	return nil
+}
+
+func (userRepository *UsersDynamoDBStore) AddCourse(usersCourse model.UsersCourse, username string) error {
+	err := userRepository.GetDBClient()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	user, err := userRepository.GetByUsername(username)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	user.UsersCourses = append(user.UsersCourses, usersCourse)
+	fmt.Println(user.UsersCourses)
+	courseList, err := attributevalue.MarshalList(user.UsersCourses)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	updateInput := &dynamodb.UpdateItemInput{
+		TableName: aws.String(userRepository.TableName),
+		Key: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberN{Value: user.ID},
+		},
+		UpdateExpression: aws.String("SET users_courses = :users_courses"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":users_courses": &types.AttributeValueMemberL{Value: courseList},
+		},
+	}
+	_, err = userRepository.DynamoDbClient.UpdateItem(context.TODO(), updateInput)
 	if err != nil {
 		fmt.Println("Error updating course item: ", err)
 		return err

@@ -3,11 +3,12 @@ import Logo from '../../assets/logo-color.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import ImageService from '../../service/ImageService';
 function Navbar() {
 
     const navigate = useNavigate();
 
-    function courseNavigate(){
+    async function courseNavigate(){
         navigate('/course-create');
     }
 

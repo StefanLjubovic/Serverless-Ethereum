@@ -1,26 +1,33 @@
 import "./EnrolledRight.css"
 import React, { useState } from 'react';
 import Dropdown from "../Dropdown/Dropdown";
+import { useEffect } from "react";
 
-function EnrolledRight(){
+function EnrolledRight({course,triggerFunction,user,courseMap}){
 
     const [isOpen, setIsOpen] = useState(false);
-    const dropdownItems = ['Item 1', 'Item 2', 'Item 3'];
 
-    function toggleDropdown() {
-        setIsOpen(!isOpen);
-    }
+    useEffect(()=>{
+        
+    },[course,user])
+
+    function externalFunction(video) {
+        triggerFunction(video)
+      }
+
 
     return(
         <div className="e-right">
             <div>
                 Course content
             </div>
+            {(course != null &&  course.Sections != null) &&
             <div className="dropdown-list">
-            {dropdownItems.map((item, index) => (
-                <Dropdown key={index} items={dropdownItems} />
+            {course.Sections.map((item, index) => (
+                <Dropdown key={index} section={item}  triggerFunction={externalFunction} courseMap={courseMap}/>
             ))}
             </div>
+            }
         </div>
     );
 }

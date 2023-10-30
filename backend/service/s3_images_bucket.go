@@ -12,6 +12,12 @@ func CreateCourseBucket(stack *awscdk.Stack) *awss3.Bucket {
 	bucket := awss3.NewBucket(*stack, aws.String("CourseBucket"), &awss3.BucketProps{
 		Versioned:     jsii.Bool(true),
 		AccessControl: awss3.BucketAccessControl_BUCKET_OWNER_FULL_CONTROL,
+		BlockPublicAccess: awss3.NewBlockPublicAccess(&awss3.BlockPublicAccessOptions{
+			BlockPublicAcls:       jsii.Bool(false),
+			BlockPublicPolicy:     jsii.Bool(false),
+			IgnorePublicAcls:      jsii.Bool(false),
+			RestrictPublicBuckets: jsii.Bool(false),
+		}),
 	})
 	return &bucket
 

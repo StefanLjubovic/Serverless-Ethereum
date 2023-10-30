@@ -68,54 +68,53 @@ function FirstPage({onPageChange }) {
           }
 
           async function save() {
-            if(name === '' || description === '' || price ==='' || certPath == '' || wallpaperPath == '' || certName == '' || certDescription == '') return
-            CourseService.DeployCouse(37.02).then(async resp => {
-                console.log(resp.data);
-                let id = resp.data.id
+            if (name === '' || description === '' || price === '' || certPath === '' || wallpaperPath === '' || certName === '' || certDescription === '') {
+              return;
+            }
+            try {
+              const deployResponse = await CourseService.DeployCouse(price);
+              const courseId = deployResponse.data.id;
+              const loadingSwal = MySwal.fire({
+                title: 'Waiting for response from the server.',
+                html: 'This will take a moment.',
+                timerProgressBar: true,
+                didOpen: () => {
+                  MySwal.showLoading();
+                },
+              });
+          
+              const receipt = await Web3Service.deployCourse(deployResponse.data.id, deployResponse.data.price_in_wei);
+              loadingSwal.close();
+          
+              if (receipt && receipt.status) {
+                let image_path = '';
+                let cert_path = '';
+                const uploadWallpaper = await ImageService.uploadImage(wallpaperFile,wallpaperFile.name);
+                image_path = uploadWallpaper.data;
 
-                MySwal.fire({
-                  title: 'Waiting response from a server.',
-                 html: 'This will take a second.',
-                 timerProgressBar: true,
-                 didOpen: () => {
-                  MySwal.showLoading()
-                 },
-                 })
-                const receipt = await Web3Service.deployCourse(resp.data.id, resp.data.price_in_wei);
-                MySwal.close();
-                if (receipt && receipt.status) {
-                let image_path = ''
-                let cert_path = ''
-                console.log("Transaction receipt:", receipt);
-                 ImageService.uploadImage(wallpaperFile).then(resp=>{
-                    image_path = resp.data
-                    console.log(resp.data)
-                    ImageService.uploadImage(certFile).then(resp1=>{
-                      cert_path = resp1.data
-                      console.log(resp1.data)
-                      const course = {
-                        id: resp.data.id,
-                        name: name,
-                        description: description,
-                        price_usd: Number(price),
-                        image: image_path,
-                        certificate: {
-                          name : certName,
-                          description : certDescription,
-                          image_path : cert_path
-                        }
-                    };
-                    console.log(course)
-                    CourseService.SaveCourse(course).then(async resp3 => {
-                        console.log(resp3);
-                        onPageChange(id)
-                    });
-
-                   })
-                 })
-                }
-            });
-        }
+                const uploadCert = await ImageService.uploadImage(certFile,certFile.name);
+                cert_path = uploadCert.data;
+          
+                const course = {
+                  id: courseId,
+                  name: name,
+                  description: description,
+                  price_usd: Number(price),
+                  image: image_path,
+                  certificate: {
+                    name: certName,
+                    description: certDescription,
+                    image_path: cert_path,
+                  },
+                };  
+                await CourseService.SaveCourse(course);
+                onPageChange(courseId);
+              }
+            } catch (error) {
+              console.error(error);
+            }
+          }
+          
         
 
 

@@ -23,7 +23,7 @@ function AllCourses(){
     },[])
 
     async function checkIfCourseBought(id){
-        let resp =await Web3Service.checkIfUserPurchased(id,"Stefan")
+        let resp =await Web3Service.checkIfUserPurchased(id,"ljubo")
             if (!resp){
                 navigate('/course/'+id);
             }else{

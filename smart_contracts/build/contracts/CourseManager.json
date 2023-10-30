@@ -2987,12 +2987,12 @@
     "11155111": {
       "events": {},
       "links": {},
-      "address": "0xc95b71f2DBaF13B53673B1A5bcb73877Fc2579E1",
-      "transactionHash": "0x452f35120fbce78b22180325499e2dcf2745917dfa6431601cba78dd44be2a30"
+      "address": "0xD1D16ea604A99CE73E2ce4597dbB7E73445F26fD",
+      "transactionHash": "0x9711d5f8d2915a40276d9c06be5afb084c595e41224acda564162708bd206e82"
     }
   },
   "schemaVersion": "3.4.14",
-  "updatedAt": "2023-08-26T08:47:25.840Z",
+  "updatedAt": "2023-10-25T07:10:39.365Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

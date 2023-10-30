@@ -1,7 +1,7 @@
 import "./CourseLeft.css"
 
 
-function CourseLeft(){
+function CourseLeft({id}){
 
     let course ={
         "title": "Blockchain A-Z™: Learn How To Build Your First Blockchain",

@@ -1,5 +1,5 @@
 import Web3 from "web3";
-import { COUSE_MANAGER_ABI, COUSE_MANAGER_ADDRESS,COURSE_ABI } from "../constants"
+import { COUSE_MANAGER_ABI, COUSE_MANAGER_ADDRESS,COURSE_ABI,NFT_ABI,NFT_ADDRESS } from "../constants"
 const Web3Service = {
 
     connectToMetaMask: async function() {
@@ -51,7 +51,10 @@ const Web3Service = {
     
         return new web3.eth.Contract(COUSE_MANAGER_ABI, COUSE_MANAGER_ADDRESS);
       },
-
+      getNFTContract: async function(){
+        const web3 = await this.connectToMetaMask()
+        return new web3.eth.Contract(NFT_ABI,NFT_ADDRESS)
+      },
 
       deployCourse: async function(id, priceInWei) {
         return new Promise(async (resolve, reject) => {
@@ -75,6 +78,21 @@ const Web3Service = {
                 reject(error); // Reject with any unexpected error
             }
         });
+    },
+    minfNFT: async function(id, url){
+        try {
+            const contract = await this.getNFTContract();
+            const address = await this.getAccount();
+            const transaction = await contract.methods
+              .safeMint(address, id, url)
+              .send({ from: address });
+        
+            console.log(transaction);
+            return transaction; // Resolve with the transaction response
+          } catch (error) {
+            console.error(error);
+            throw error; // Reject with the error
+          }
     },
 
 
@@ -121,23 +139,20 @@ const Web3Service = {
             const senderAddress = await this.getAccount();
             const coursePriceInWei = await this.getCoursePriceInWei(id);
             const course = await this.getCourse(id);
-            console.log(senderAddress)
-            console.log(coursePriceInWei)
-            console.log(course)
-            console.log(username)
+
             await course.methods.purchaseCourse(username)
                 .send({
                     from: senderAddress,
                     value: coursePriceInWei,
                 })
                 .then((receipt) => {
-                    console.log('Transaction receipt:', receipt);
+                    return true
                 })
                 .catch((error) => {
-                    console.error('Error:', error);
+                    return false
                 });
         } catch (error) {
-            console.error("Error:", error);
+            return false
         }
     }
 

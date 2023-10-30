@@ -21,7 +21,7 @@ const getCoursesDir = "../lambdas"
 
 func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTable awsdynamodb.Table, s3ImagesBucket awss3.Bucket, userPool awscognito.UserPool) {
 
-	userService := NewUserHandler()
+	userService := NewUserHandler(*s3ImagesBucket.BucketName())
 	userServiceJson, err := json.Marshal(userService)
 	if err != nil {
 		return
@@ -97,7 +97,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
 		Path:        jsii.String("/courses/{id}"),
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
-		Integration: coursesFunctionIntg2, Authorizer: httpApiAuthorizer})
+		Integration: coursesFunctionIntg2})
 
 	// UPLOAD OBJECT
 	coursesFunction3 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("upload_object"),
@@ -112,8 +112,7 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
 		Path:        jsii.String("/courses/upload-object"),
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
-		Integration: coursesFunctionIntg3,
-		Authorizer:  httpApiAuthorizer})
+		Integration: coursesFunctionIntg3})
 
 	s3ImagesBucket.GrantReadWrite(coursesFunction3, true)
 
@@ -247,8 +246,81 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
 		Path:        jsii.String("/users/courses"),
 		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
-		Integration: coursesFunctionIntg8})
+		Integration: coursesFunctionIntg8,
+		Authorizer:  httpApiAuthorizer})
 
 	usersTable.GrantReadWriteData(coursesFunction8)
 	coursesTable.GrantReadWriteData(coursesFunction8)
+
+	// Add USER COURSE
+	coursesFunction9 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("add_users_course"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Environment: &map[string]*string{"USERS_SERVICE": aws.String(string(usersServiceJSON))},
+			Entry:       jsii.String("../lambdas/add_users_course")})
+
+	coursesFunctionIntg9 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("courses-function-integration"), coursesFunction9, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/users/courses/{id}"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_PUT},
+		Integration: coursesFunctionIntg9})
+
+	usersTable.GrantReadWriteData(coursesFunction9)
+
+	// GET OBJECT
+	coursesFunction10 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("get_object"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Environment: &map[string]*string{"COURSES_SERVICE": aws.String(string(serviceJSON))},
+			Entry:       jsii.String("../lambdas/get_object")})
+
+	coursesFunctionIntg10 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("courses-function-integration"), coursesFunction10, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/courses/get-object/{path}"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
+		Integration: coursesFunctionIntg10})
+
+	s3ImagesBucket.GrantRead(coursesFunction10, true)
+
+	// Add USER COURSE
+	coursesFunction11 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("get_user_by_username"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Environment: &map[string]*string{"USERS_SERVICE": aws.String(string(usersServiceJSON))},
+			Entry:       jsii.String("../lambdas/get_user_by_username")})
+
+	coursesFunctionIntg11 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("courses-function-integration"), coursesFunction11, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/users/username"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_GET},
+		Integration: coursesFunctionIntg11})
+
+	usersTable.GrantReadData(coursesFunction11)
+
+	// Add USER COURSE
+	time := *aws.Float64(60.0)
+	coursesFunction12 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("add_watched_video"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Timeout:     awscdk.Duration_Seconds(&time),
+			Environment: &map[string]*string{"USERS_SERVICE": aws.String(string(usersServiceJSON))},
+			Entry:       jsii.String("../lambdas/add_watched_video")})
+
+	coursesFunctionIntg12 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("courses-function-integration"), coursesFunction12, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/users/watched"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_PUT},
+		Integration: coursesFunctionIntg12})
+
+	usersTable.GrantReadWriteData(coursesFunction12)
+	s3ImagesBucket.GrantRead(coursesFunction12, true)
+	coursesTable.GrantReadWriteData(coursesFunction12)
 }

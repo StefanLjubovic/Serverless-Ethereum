@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown,faTrash,faPen,faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { useEffect } from "react";
+import ImageService from "../../../../service/ImageService";
 import CourseService from "../../../../service/CourseService";
 function DropdownCreate({ section ,id }){
     const [isOpen, setIsOpen] = useState(false);
@@ -29,13 +30,17 @@ function DropdownCreate({ section ,id }){
     setVideoTitle(e.target.value);
   };
 
-  function SaveVideo(){
-    if(videoTitle === '') return
+  async function SaveVideo(){
+    
+    if(videoTitle === '' || imagePath === '') return
+    
+    let image_path = await ImageService.uploadImage(imageFile,imageFile.name)
+    console.log(imagePath.data)
       const add_video ={
         "section_name" : section.Name,
         "video_name" : videoTitle,
         "course_id" : id,
-        "video_path" : "path",
+        "video_path" : image_path.data,
         "length" : 3
       }
       CourseService.AddVideo(add_video).then(resp=>{
