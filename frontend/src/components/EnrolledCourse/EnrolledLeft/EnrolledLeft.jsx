@@ -4,7 +4,7 @@ import videtoTest from "../../../assets/videoplayback.mp4"
 import 'react-html5video/dist/styles.css'
 import Img from "../../../assets/code.jpg"
 import UsersService from "../../../service/UsersService";
-
+import Web3Service from "../../../service/Web3Service";
 function EnrolledLeft({ path ,video,course,triggerFunctionLeft}) {
 
   const handleVideoEnd = () => {
@@ -12,7 +12,16 @@ function EnrolledLeft({ path ,video,course,triggerFunctionLeft}) {
       "video": video.Name,
       "id": course.ID
     }
+
     UsersService.AddWatchedVideo(data).then(resp=>{
+      UsersService.ReceiveCertificate(course.ID).then(resp1=>{
+        Web3Service.minfNFT(resp1.data)
+      })
+      if (resp.data){
+        UsersService.ReceiveCertificate(course.ID).then(resp1=>{
+          console.log(resp1.data)
+        })
+      }
       triggerFunctionLeft(video.Name)
     })
   };

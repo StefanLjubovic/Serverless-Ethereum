@@ -69,8 +69,8 @@ export const COUSE_MANAGER_ABI =[
   }
 ]
 
-  export const COUSE_MANAGER_ADDRESS = "0xd1d16ea604a99ce73e2ce4597dbb7e73445f26fd"
-  export const NFT_ADDRESS = "0x8fee3d2b55264091ca68cdd8a47e4e87505f1026"
+  export const COUSE_MANAGER_ADDRESS = "0xa3f8f5c759e353f9ae341f2969b0a2eff14f55ae"
+  export const NFT_ADDRESS = "0xb5856c315f335d4a608bb2747243bc9cac32c3e3"
 
   export const COURSE_ABI = [
     {
@@ -158,7 +158,7 @@ export const COUSE_MANAGER_ABI =[
     }
   ]
 
-  export const NFT_ABI = [
+  export const NFT_ABI =[
     {
       "inputs": [],
       "stateMutability": "nonpayable",
@@ -498,8 +498,48 @@ export const COUSE_MANAGER_ABI =[
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
       "inputs": [],
       "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenURI",
       "outputs": [
         {
           "internalType": "string",
@@ -551,63 +591,24 @@ export const COUSE_MANAGER_ABI =[
       "inputs": [
         {
           "internalType": "address",
-          "name": "to",
+          "name": "recipient",
           "type": "address"
         },
         {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
           "internalType": "string",
-          "name": "uri",
+          "name": "tokenURI",
           "type": "string"
         }
       ],
-      "name": "safeMint",
-      "outputs": [],
+      "name": "mintNFT",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "tokenURI",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "",
-          "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes4",
-          "name": "interfaceId",
-          "type": "bytes4"
-        }
-      ],
-      "name": "supportsInterface",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
     }
   ]

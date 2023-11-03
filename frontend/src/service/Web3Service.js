@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import { COUSE_MANAGER_ABI, COUSE_MANAGER_ADDRESS,COURSE_ABI,NFT_ABI,NFT_ADDRESS } from "../constants"
+import axios from "axios";
 const Web3Service = {
 
     connectToMetaMask: async function() {
@@ -79,21 +80,45 @@ const Web3Service = {
             }
         });
     },
-    minfNFT: async function(id, url){
-        try {
+    minfNFT: async function(url){
+    
             const contract = await this.getNFTContract();
             const address = await this.getAccount();
             const transaction = await contract.methods
-              .safeMint(address, id, url)
-              .send({ from: address });
-        
-            console.log(transaction);
+              .mintNFT(address, url)
+              .send({ from: address }) .on('receipt', function(receipt) {
+                const newItemId = receipt.events.YourEventName.returnValues.newItemId;
+                console.log("Newly minted NFT ID:", newItemId);
+              })
+              .on('error', function(error) {
+                console.error("Error:", error);
+              });
             return transaction; // Resolve with the transaction response
-          } catch (error) {
-            console.error(error);
-            throw error; // Reject with the error
-          }
-    },
+    }, 
+
+    retrieveNFTsByAccount: async function() {
+        const address = await this.getAccount();
+        const url = `https://testnets-api.opensea.io/v2/chain/sepolia/account/${address}/nfts?limit=50`;
+    
+        try {
+        const response = await axios.get(url, {
+            headers: {
+            Accept: 'application/json',
+            },
+        });
+    
+        if (response.status === 200) {
+            const nftCollection = response.data;
+            return nftCollection;
+        } else {
+            console.error('Request failed with status:', response.status);
+            return null;
+        }
+        } catch (error) {
+        console.error('An error occurred:', error);
+        return null;
+        }
+  },
 
 
       getCourseOwner: async function(id) {

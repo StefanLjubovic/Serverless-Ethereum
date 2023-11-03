@@ -323,4 +323,23 @@ func DefineLambdas(stack *awscdk.Stack, usersTable awsdynamodb.Table, coursesTab
 	usersTable.GrantReadWriteData(coursesFunction12)
 	s3ImagesBucket.GrantRead(coursesFunction12, true)
 	coursesTable.GrantReadWriteData(coursesFunction12)
+
+	coursesFunction13 := awscdklambdagoalpha.NewGoFunction(*stack, jsii.String("receive_certifikate"),
+		&awscdklambdagoalpha.GoFunctionProps{
+			Runtime:     awslambda.Runtime_GO_1_X(),
+			Timeout:     awscdk.Duration_Seconds(&time),
+			Environment: &map[string]*string{"USERS_SERVICE": aws.String(string(usersServiceJSON))},
+			Entry:       jsii.String("../lambdas/receive_certifikate")})
+
+	coursesFunctionIntg13 := awscdkapigatewayv2integrationsalpha.NewHttpLambdaIntegration(
+		jsii.String("courses-function-integration"), coursesFunction13, nil)
+
+	api.AddRoutes(&awscdkapigatewayv2alpha.AddRoutesOptions{
+		Path:        jsii.String("/users/certifikate/{id}"),
+		Methods:     &[]awscdkapigatewayv2alpha.HttpMethod{awscdkapigatewayv2alpha.HttpMethod_POST},
+		Integration: coursesFunctionIntg13})
+
+	usersTable.GrantReadWriteData(coursesFunction13)
+	s3ImagesBucket.GrantRead(coursesFunction13, true)
+	coursesTable.GrantReadWriteData(coursesFunction13)
 }

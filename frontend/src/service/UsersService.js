@@ -29,6 +29,15 @@ const UsersService = {
                  Accept: 'application/json',
             }
         });
+    },
+
+    ReceiveCertificate: function(id){
+        return axios.post(this.baseURL + 'users/certifikate/'+id ,{
+            headers: {
+                'Content-Type': 'application/json',
+                 Accept: 'application/json',
+            }
+        });
     }
 }
 

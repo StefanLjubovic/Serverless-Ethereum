@@ -162,43 +162,49 @@ func merge(a []model.UsersCourse, b []model.UsersCourse) []model.UsersCourse {
 	return final
 }
 
-func (usersService *UsersService) AddWatchedVideo(username string, dto *dto.AddWatchedDTO) error {
+func (usersService *UsersService) AddWatchedVideo(username string, dto *dto.AddWatchedDTO) (bool, error) {
 	user, err := usersService.UserRepository.GetByUsername(username)
-	// if err != nil {
-	// 	return err
-	// }
-	// var usersCourse model.UsersCourse
-	// for _, course := range user.UsersCourses {
-	// 	if course.Course == dto.CourseId {
-	// 		if course.Watched[dto.Video] {
-	// 			return nil
-	// 		}
-	// 		course.LastTimeWatched = time.Now()
-	// 		course.Watched[dto.Video] = true
-	// 		course.WatchedCount++
-	// 		usersCourse = course
-	// 	}
-	// }
-	// fmt.Println(usersCourse)
-	// err = usersService.UserRepository.UpdateUsersCourses(user.ID, &user.UsersCourses)
-	// if err != nil {
-	// 	return err
-	// }
+	if err != nil {
+		return false, err
+	}
+	var usersCourse model.UsersCourse
+	for _, course := range user.UsersCourses {
+		if course.Course == dto.CourseId {
+			if course.Watched[dto.Video] {
+				return false, nil
+			}
+			course.LastTimeWatched = time.Now()
+			course.Watched[dto.Video] = true
+			course.WatchedCount++
+			usersCourse = course
+		}
+	}
+	err = usersService.UserRepository.UpdateUsersCourses(user.ID, &user.UsersCourses)
+	if err != nil {
+		return false, err
+	}
 	course, err := usersService.CoursesRepository.GetCourseById(strconv.Itoa(dto.CourseId))
 	if err != nil {
-		return err
+		return false, err
+	}
+
+	courseVideosSum := 0
+	for _, section := range course.Sections {
+		courseVideosSum += len(section.Videos)
+	}
+	if courseVideosSum-usersCourse.WatchedCount == 0 {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (usersService *UsersService) ReceiveCertificate(username string, id string) (string, error) {
+	user, err := usersService.UserRepository.GetByUsername(username)
+	course, err := usersService.CoursesRepository.GetCourseById(id)
+	if err != nil {
+		return "", err
 	}
 	usersService.S3ImageService.Start(context.TODO())
 	img, _ := usersService.S3ImageService.GetObject(context.TODO(), course.Certificate.ImagePath)
-	fmt.Println(img)
 	return usersService.NFTService.ReceiveCertificate(user, course, img)
-	// courseVideosSum := 0
-	// for _, section := range course.Sections {
-	// 	courseVideosSum += len(section.Videos)
-	// }
-	// if courseVideosSum-usersCourse.WatchedCount == 0 {
-	// 	img, _ := usersService.S3ImageService.GetObject(context.TODO(), course.Certificate.ImagePath)
-	// 	return receiveCertificate(user, course, img)
-	// }
-	// return nil
 }
