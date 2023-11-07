@@ -5,21 +5,36 @@ import 'react-html5video/dist/styles.css'
 import Img from "../../../assets/code.jpg"
 import UsersService from "../../../service/UsersService";
 import Web3Service from "../../../service/Web3Service";
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content'
+import Celebration from "../../../assets/celebration.avif"
+import Gif from "../../../assets/done.gif"
 function EnrolledLeft({ path ,video,course,triggerFunctionLeft}) {
-
+  const MySwal = withReactContent(Swal)
   const handleVideoEnd = () => {
     let data ={
       "video": video.Name,
       "id": course.ID
     }
+    
 
     UsersService.AddWatchedVideo(data).then(resp=>{
-      UsersService.ReceiveCertificate(course.ID).then(resp1=>{
-        Web3Service.minfNFT(resp1.data)
-      })
       if (resp.data){
         UsersService.ReceiveCertificate(course.ID).then(resp1=>{
           console.log(resp1.data)
+          MySwal.fire({
+            title: "You have finished course congratulations!",
+            width: 600,
+            padding: "3em",
+            color: "#716",
+            background: `#fff url(${Celebration}) left top no-repeat`,
+            backdrop: `
+              rgba(0,0,123,0.4)
+              url(${Gif}) 
+              left top 
+              no-repeat
+            `
+          });
         })
       }
       triggerFunctionLeft(video.Name)
