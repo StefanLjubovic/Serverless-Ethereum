@@ -4,7 +4,7 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import EnrolledLeft from "./EnrolledLeft/EnrolledLeft";
 import EnrolledRight from "./EnrolledRight/EnrolledRight";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CourseService from "../../service/CourseService"
 import { useState } from "react";
 import ImageService from "../../service/ImageService";
@@ -17,6 +17,7 @@ function EnrolledCourse(){
     const [user,setUser] = useState(null)
     const [video,setVideo] = useState(null)
     const [courseMap,setCourseMap] = useState(new Set())
+    const navigate = useNavigate()
     useEffect(()=>{
         CourseService.GetById(id).then(resp=>{
             console.log(resp.data)
@@ -48,14 +49,13 @@ function EnrolledCourse(){
         newCourseMap[video] = true
         setCourseMap(newCourseMap);
       }
-    
 
     return(
         <div className="enrolled">
             <div className="header">
                 <div>
             <FontAwesomeIcon icon={faChevronLeft} className="icon"/>
-                <p>Home</p>
+                <div onClick={()=>navigate('/')}><p>Home</p></div>
                 </div>
                 <p className="separator">|</p>
               {course != null &&  <p>{course.Name}</p> }

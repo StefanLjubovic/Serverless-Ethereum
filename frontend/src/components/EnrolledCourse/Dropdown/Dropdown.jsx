@@ -17,8 +17,6 @@ function Dropdown({section, triggerFunction,courseMap}){
       triggerFunction(video);
     }
     function check(item){
-      console.log(item.Name)
-      console.log(courseMap)
       return courseMap[item.Name]
     }
 

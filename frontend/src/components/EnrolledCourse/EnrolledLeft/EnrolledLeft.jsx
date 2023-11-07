@@ -1,14 +1,11 @@
 import "./EnrolledLeft.css"
 import { DefaultPlayer as Video } from 'react-html5video';
-import videtoTest from "../../../assets/videoplayback.mp4"
 import 'react-html5video/dist/styles.css'
 import Img from "../../../assets/code.jpg"
 import UsersService from "../../../service/UsersService";
-import Web3Service from "../../../service/Web3Service";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
 import Celebration from "../../../assets/celebration.avif"
-import Gif from "../../../assets/done.gif"
 function EnrolledLeft({ path ,video,course,triggerFunctionLeft}) {
   const MySwal = withReactContent(Swal)
   const handleVideoEnd = () => {
