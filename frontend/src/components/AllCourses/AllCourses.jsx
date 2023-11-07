@@ -39,7 +39,7 @@ function AllCourses(){
                 <div className="course" key={index} onClick={()=>checkIfCourseBought(item.ID)}>
                     <div>
                         <FontAwesomeIcon icon={faCirclePlay} className="icon"/>
-                        <img src={Logo} className="course-img" alt="Logo" />
+                        <img src={item.Image} type="jpg" className="course-img" alt="Logo" />
                      </div>
                      <div>
                         <p className="title">{item.Name}</p>

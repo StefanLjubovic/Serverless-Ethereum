@@ -75,6 +75,26 @@
     height:2rem;
 }
 
+.navigation .btn-divv{
+    display: flex;
+    gap:1rem;
+}
+
+.navigation .btn-divv> :nth-child(1){
+    cursor: pointer;
+    color: black;
+    background-color: transparent;
+    height:2rem;
+    font-size: small;
+}
+
+.navigation .btn-divv> :nth-child(2){
+    cursor: pointer;
+    background-color: black;
+    color:var(--white);
+    height:2rem;
+}
+
 .navigation .searchInput {
     border: none;
     background-color: var(--light-grey);
