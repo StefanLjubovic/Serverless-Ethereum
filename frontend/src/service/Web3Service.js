@@ -87,8 +87,6 @@ const Web3Service = {
             const transaction = await contract.methods
               .mintNFT(address, url)
               .send({ from: address }) .on('receipt', function(receipt) {
-                const newItemId = receipt.events.YourEventName.returnValues.newItemId;
-                console.log("Newly minted NFT ID:", newItemId);
               })
               .on('error', function(error) {
                 console.error("Error:", error);

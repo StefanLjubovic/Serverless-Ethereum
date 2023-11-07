@@ -8,7 +8,6 @@ function EnrolledRight({course,triggerFunction,user,courseMap}){
     const [isOpen, setIsOpen] = useState(false);
 
     useEffect(()=>{
-        
     },[course,user])
 
     function externalFunction(video) {

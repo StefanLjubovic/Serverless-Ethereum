@@ -26,13 +26,17 @@ function EnrolledCourse(){
             console.log(resp1)
             setUser(resp1.data)
         })
+    },[])
+    useEffect(()=>{
         if (user== undefined || course == undefined) return
+        console.log(user.UsersCourses)
         user.UsersCourses.forEach((userCourse) => {
             if (userCourse.Course === course.ID) {
                 setCourseMap(userCourse.Watched)
+                return
             }
           });
-    },[])
+    },[user])
 
    async function externalFunction(video) {
         console.log(video.Path)

@@ -31,6 +31,15 @@ const UsersService = {
         });
     },
 
+    GetUserCourses: function(){
+        return axios.get(this.baseURL + 'users/courses' ,{
+            headers: {
+                'Content-Type': 'application/json',
+                 Accept: 'application/json',
+            }
+        });
+    },
+
     ReceiveCertificate: function(id){
         return axios.post(this.baseURL + 'users/certifikate/'+id ,{
             headers: {
