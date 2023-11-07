@@ -17,10 +17,10 @@
 }
 
 .navigation .logo{
-    width: 4rem;
+    width: 8rem;
     height: 2.5rem;
-    object-fit: cover;
     cursor: pointer;
+
 }
 
 .navigation > :nth-child(2) {
