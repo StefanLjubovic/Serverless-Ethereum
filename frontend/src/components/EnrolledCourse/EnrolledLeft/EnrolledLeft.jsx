@@ -16,7 +16,6 @@ function EnrolledLeft({ path ,video,course,triggerFunctionLeft}) {
       "video": video.Name,
       "id": course.ID
     }
-    
 
     UsersService.AddWatchedVideo(data).then(resp=>{
       if (resp.data){
@@ -28,12 +27,6 @@ function EnrolledLeft({ path ,video,course,triggerFunctionLeft}) {
             padding: "3em",
             color: "#716",
             background: `#fff url(${Celebration}) left top no-repeat`,
-            backdrop: `
-              rgba(0,0,123,0.4)
-              url(${Gif}) 
-              left top 
-              no-repeat
-            `
           });
         })
       }
