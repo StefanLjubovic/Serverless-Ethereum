@@ -1,98 +1,119 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
 
 .navigation {
     display: flex;
     flex-direction: row;
-    height: 3.3rem;
+    height: 4.5rem;
     justify-content: space-between;
     padding-left: 5%;
     padding-right: 5%;
+    padding-top: 5vh;
+    padding-bottom: 5.5vh;
     position: sticky;
     top: 0;
     z-index: 100;
-    position:relative;
-    border-top: 0.5px solid var(--gray);
-    border-bottom: 0.5px solid var(--gray);
+    position: relative;
     align-items: center;
-    gap:1rem;
+    gap: 1rem;
+    box-shadow: 0px 12px 24px 0px rgba(0, 0, 0, 0.10);
+    font-family: "Montserrat", sans-serif;
 }
 
-.navigation .logo{
-    width: 8rem;
-    height: 2.5rem;
+.navigation .logo {
+    width: 4.5rem;
+    height: 4.5rem;
     cursor: pointer;
-
+    float: left;
+    margin-bottom: -52px;
 }
 
-.navigation > :nth-child(2) {
-    flex:4;
+.navigation .app-name {
+    float: right;
+    margin-left: 90px;
+    margin-top: 5px;
+    color: rgb(60, 7, 112);
+    font-weight: 500;
+}
+
+.navigation> :nth-child(2) {
+    flex: 4;
     height: 100%;
     display: flex;
     align-items: center;
-  }
+}
 
-  .navigation > :nth-child(1) {
-    flex:1;
+.navigation> :nth-child(1) {
+    flex: 1;
     justify-content: center;
     align-items: center;
-  }
+}
 
-  .navigation > :nth-child(3) {
-    flex:1;
+.navigation> :nth-child(3) {
+    flex: 1;
     display: flex;
     justify-content: flex-end;
-  }
+}
 
-
-  .navigation .search{
+.navigation .search {
     display: flex;
     align-items: center;
     color: var(--gray);
     background-color: var(--white);
-    height: 70%;
+    height: 4.2vh;
     width: 100%;
     border-radius: 15px;
-    border: 1px solid black;
     margin-left: 0.5rem;
     padding-left: 1rem;
     gap: 1rem;
+    box-shadow: 0px 0px 70px 5px rgba(0, 0, 0, 0.10);
+    margin-top: 7px;
 }
-.navigation .btn-div{
+
+button {
+    border-radius: 20px;
+    border: 1px solid #8404fc;
+    background-color: #8404fc;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.navigation .btn-div {
     display: flex;
-    gap:1rem;
+    gap: 1rem;
+    margin-top: 3px;
 }
 
-.navigation .btn-div> :nth-child(1){
-    cursor: pointer;
-    color: black;
-    background-color: transparent;
-    height:2rem;
+.navigation .btn-div> :nth-child(1) {
+    color: var(--white);
+    height: 4.5vh;
+    width: 13vh;
 }
 
-.navigation .btn-div> :nth-child(2){
-    cursor: pointer;
-    background-color: black;
-    color:var(--white);
-    height:2rem;
-}
-
-.navigation .btn-divv{
+.navigation .btn-divv {
     display: flex;
-    gap:1rem;
+    gap: 1rem;
+    margin-top: 3px;
 }
 
-.navigation .btn-divv> :nth-child(1){
-    cursor: pointer;
-    color: black;
+/* Create course button */
+.navigation .btn-divv> :nth-child(1) {
+    color: #8404fc;
     background-color: transparent;
-    height:2rem;
-    font-size: small;
+    height: 2rem;
+    height: 4.5vh;
+    width: 20vh;
 }
 
-.navigation .btn-divv> :nth-child(2){
-    cursor: pointer;
-    background-color: black;
-    color:var(--white);
-    height:2rem;
+/* My profile button */
+.navigation .btn-divv> :nth-child(2) {
+    color: var(--white);
+    height: 4.5vh;
+    width: 18vh;
 }
 
 .navigation .searchInput {
