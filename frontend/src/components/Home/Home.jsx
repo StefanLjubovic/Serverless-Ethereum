@@ -3,6 +3,7 @@ import StartedCourses from "../StartedCourses/StartedCourses";
 import "./Home.css"
 import Web3Service from "../../service/Web3Service";
 import { useEffect } from "react";
+
 function Home() {
 
     useEffect(()=>{

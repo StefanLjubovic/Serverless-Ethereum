@@ -5,10 +5,11 @@ import { faMagnifyingGlass, faUser,faBook } from '@fortawesome/free-solid-svg-ic
 import { useNavigate } from 'react-router-dom';
 import ImageService from '../../service/ImageService';
 import { useState } from 'react';
+
 function Navbar() {
 
     const navigate = useNavigate();
-    const [isLoggedIn,setIsLoggedIn] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(true)
 
     async function courseNavigate(){
         navigate('/course-create');
