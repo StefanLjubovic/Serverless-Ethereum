@@ -2,20 +2,24 @@ import AllCourses from "../AllCourses/AllCourses";
 import StartedCourses from "../StartedCourses/StartedCourses";
 import "./Home.css"
 import Web3Service from "../../service/Web3Service";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Home() {
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-    useEffect(()=>{
-        Web3Service.retrieveNFTsByAccount().then(resp=>{{
-            console.log(resp)
-        }})
-    },[])
+    useEffect(() => {
+        Web3Service.retrieveNFTsByAccount().then(resp => {
+            {
+                console.log(resp)
+            }
+        })
+    }, [])
 
-    return(
+    return (
         <div className="home">
-            <StartedCourses/>
-            <AllCourses/>
+            <br />
+            {isLoggedIn ? <StartedCourses /> : null}
+            <AllCourses />
         </div>
     );
 }

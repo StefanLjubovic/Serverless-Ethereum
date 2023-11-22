@@ -1,20 +1,18 @@
-
-
-.create{
-    display: flex;
-    flex-direction: column;
-    padding-top: 5rem;
-    padding-left: 15rem;
-    padding-right: 15rem;
+.create {
+  display: flex;
+  flex-direction: column;
+  padding-top: 5rem;
+  padding-left: 15rem;
+  padding-right: 15rem;
 }
 
-.create .name-price{
-    display: flex;
-    flex-direction: row;
-    gap: 3rem;
+.create .name-price {
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
 }
 
-.create .name{
+.create .name {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -23,94 +21,94 @@
   outline: none;
 }
 
-.create .price{
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid var(--black);
-    font-size: 16px;
-    outline: none;
-  }
-
-  .create .description{
-    width: 98%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid var(--black);
-    font-size: 16px;
-    resize: none; 
-    outline: none;
-  }
-
-  .create .images{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    gap: 2rem;
-  }
-
-  .create .image{
-    border: 1px solid black;
-    height: 20rem;
-    flex: 1;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: column;
-    padding: 1rem;
-    gap:1rem;
-  }
-
-  .create .new-img{
-    width: 70%;
-    height: 70%;
-    position: relative;
-  }
-
-  .create .img1{
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-  }
-
-  .create .img2{
-    width: 100%;
-    height: 100%;
-  }
-
-  .create  .button-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #121212;
-    position: absolute;
-    right: 0.5rem;
-    top: 1rem;
-    border-radius: 100px;
-    width: 3rem;
-    height: 3rem;
-    cursor: pointer;
+.create .price {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--black);
+  font-size: 16px;
+  outline: none;
 }
 
-.create  .delete-image {
-    color: white
+.create .description {
+  width: 98%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--black);
+  font-size: 16px;
+  resize: none;
+  outline: none;
 }
 
-.create .cert-inputs{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    gap: 1rem;
+.create .images {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  gap: 2rem;
 }
 
-.create .save{
-    position: absolute;
-    right: 3rem;
-    bottom: 0rem;
-    background-color: var(--pink);
-    color: white;
-    height: 3rem;
-    border: none;
-    cursor: pointer;
+.create .image {
+  border: 1px solid black;
+  height: 20rem;
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.create .new-img {
+  width: 70%;
+  height: 70%;
+  position: relative;
+}
+
+.create .img1 {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.create .img2 {
+  width: 100%;
+  height: 100%;
+}
+
+.create .button-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #121212;
+  position: absolute;
+  right: 0.5rem;
+  top: 1rem;
+  border-radius: 100px;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+}
+
+.create .delete-image {
+  color: white
+}
+
+.create .cert-inputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.create .save {
+  position: absolute;
+  right: 3rem;
+  bottom: 0rem;
+  background-color: var(--pink);
+  color: white;
+  height: 3rem;
+  border: none;
+  cursor: pointer;
 }

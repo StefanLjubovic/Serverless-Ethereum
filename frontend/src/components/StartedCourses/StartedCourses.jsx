@@ -31,7 +31,7 @@ function StartedCourses() {
     return (
         <div className="started-page">
             <br /> <br />
-            <h1>Pick up where you left off</h1>
+            <h1 className="title-started-courses">Pick up where you left off</h1>
             <br />
             <div className="courses">
                 {list.map((item, index) => (

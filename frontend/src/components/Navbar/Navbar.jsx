@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 function Navbar() {
     const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(true)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     async function courseNavigate() {
         navigate('/course-create');
@@ -33,7 +33,7 @@ function Navbar() {
             <div>
                 {!isLoggedIn ? (
                     <div className="btn-div">
-                        <button className='login' onClick={openRegistration}>Sign in</button>
+                        <button className='login' onClick={openRegistration}>Start learning</button>
                     </div>
                 ) : (
                     <div className="btn-divv">

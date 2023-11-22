@@ -91,7 +91,7 @@ button {
 .navigation .btn-div> :nth-child(1) {
     color: var(--white);
     height: 4.5vh;
-    width: 13vh;
+    width: 20vh;
 }
 
 .navigation .btn-divv {
