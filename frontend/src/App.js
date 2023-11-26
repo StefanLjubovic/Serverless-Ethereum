@@ -7,6 +7,7 @@ import Course from './components/Course/Course';
 import EnrolledCourse from './components/EnrolledCourse/EnrolledCourse';
 import { CourseCreate } from './components/CourseCreate/CourseCreate';
 import Registration from './components/Registration/Registration';
+import UserProfile from './components/UserProfile/UserProfile';
 
 function App() {
   const location = useLocation();
@@ -29,6 +30,7 @@ function App() {
         <Route path="/course/:id" element={<Course />} />
         <Route path="/enrolled/:id" element={<EnrolledCourse />} />
         <Route path='/course-create' element={<CourseCreate />} />
+        <Route path='/profile' element={<UserProfile />} />
       </Routes>
     </div>
   );

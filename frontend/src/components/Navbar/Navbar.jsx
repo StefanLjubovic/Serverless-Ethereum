@@ -1,5 +1,5 @@
-import './Navbar.css'
-import Logo from '../../assets/logo-simple.png'
+import './Navbar.css';
+import Logo from '../../assets/logo-simple.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 function Navbar() {
     const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(true)
 
     async function courseNavigate() {
         navigate('/course-create');
@@ -16,6 +16,10 @@ function Navbar() {
 
     const openRegistration = () => {
         navigate('/registration');
+    }
+
+    const openProfile = () => {
+        navigate('/profile');
     }
 
     return (
@@ -38,7 +42,7 @@ function Navbar() {
                 ) : (
                     <div className="btn-divv">
                         <button className='login' onClick={courseNavigate}>Create course</button>
-                        <button>My profile</button>
+                        <button onClick={openProfile}>My profile</button>
                     </div>
                 )}
             </div>

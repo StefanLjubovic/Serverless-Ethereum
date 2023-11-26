@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+
+.profile-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-child {
+    border-radius: 10px;
+    width: 87%;
+    height: 90%;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-pic-info-conatiner {
+    background: #8404fc;
+    background: -webkit-linear-gradient(to right, #8404fc, #dc10fc);
+    background: linear-gradient(#8404fc, #dc10fc);
+    height: 60%;
+    /* width: max-content; */
+    width: 25%;
+    float: left;
+    border-radius: 10px;
+    font-family: "Montserrat", sans-serif;
+}
+
+.user-avatar {
+    top: 10%;
+    left: 30%;
+    background-color: white;
+}
+
+.name-surname {
+    color: white;
+    font-size: 23px;
+}
+
+.user-info-container {
+    width: 73%;
+    height: 100%;
+    background-color: rgb(235, 235, 235);
+    border-radius: 10px;
+    font-family: "Montserrat", sans-serif;
+}
+
+.profile-title {
+    height: 11%;
+    text-align: left;
+}
+
+.profile-title h2 {
+    margin-left: 15px;
+}
+
+.user-info {
+    height: 8%;
+    display: flex;
+    overflow: hidden;
+    text-align: left;
+}
+
+.name-info {
+    width: 25%;
+    float: left;
+}
+
+.name-info p {
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 15px;
+}
+
+.name {
+    width: 50%;
+    overflow: hidden;
+    text-align: left;
+}
+
+.name p {
+    font-size: 17px;
+    ;
+}
