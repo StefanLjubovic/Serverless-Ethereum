@@ -25,6 +25,18 @@ function StartedCourses() {
             "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
             "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout"
         },
+        {
+            "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+            "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout"
+        },
+        {
+            "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+            "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout"
+        },
+        {
+            "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+            "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout"
+        },
 
     ];
 
@@ -37,7 +49,9 @@ function StartedCourses() {
                 {list.map((item, index) => (
                     <div className="course">
                         <div>
-                            <FontAwesomeIcon icon={faCirclePlay} className="icon" />
+                            <div className="icon-container">
+                                <FontAwesomeIcon icon={faCirclePlay} className="icon" />
+                            </div>
                             <img src={Logo} className="course-img" alt="Logo" />
                         </div>
                         <div>

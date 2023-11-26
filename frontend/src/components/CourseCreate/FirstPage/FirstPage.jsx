@@ -1,13 +1,14 @@
 import React, { useState, useRef } from 'react'
 import "./FirstPage.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import ImageService from '../../../service/ImageService';
 import CourseService from "../../../service/CourseService";
 import Web3Service from '../../../service/Web3Service';
 import NoImg from '../../../assets/no-img.jpg'
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content'
+import withReactContent from 'sweetalert2-react-content';
+import TextField from '@mui/material/TextField';
 
 function FirstPage({ onPageChange }) {
 
@@ -115,11 +116,35 @@ function FirstPage({ onPageChange }) {
 
   return (
     <div className='create'>
+      <h1 className="title-all-courses">Create course</h1>
+
       <div className='name-price'>
-        <input type="text" name="name" placeholder='Name' className='name' value={name} onChange={(e) => setName(e.target.value)} />
-        <input type="text" name="price" placeholder='Price (USD$)' className='price' value={price} onChange={(e) => setPrice(e.target.value)} />
+        <TextField
+          id="filled-basic"
+          label="Name"
+          color="secondary"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className='name' />
+        <TextField
+          id="filled-number"
+          label="Price (USD$)"
+          color="secondary"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          className='price'
+          type='number' />
       </div>
-      <textarea name="description" id="" cols="30" rows="5" className='description' value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Description'></textarea>
+      <TextField
+        id="outlined-multiline-flexible"
+        label="Description"
+        color="secondary"
+        multiline
+        maxRows={5}
+        className='description'
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
       <div className='images'>
         <div className='image'>
           <label>Course image</label>
