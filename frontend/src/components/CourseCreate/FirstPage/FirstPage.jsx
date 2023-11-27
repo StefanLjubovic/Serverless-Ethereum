@@ -26,6 +26,7 @@ function FirstPage({ onPageChange }) {
   const [price, setPrice] = useState('')
 
   function uploadPhoto(event) {
+    console.log(event)
     Web3Service.getCourse()
     const files = event.target.files;
     const fileReader = new FileReader();
@@ -164,8 +165,24 @@ function FirstPage({ onPageChange }) {
         <div className='image'>
           <label>Course certificate 🧑‍🎓</label>
           <div className='cert-inputs'>
-            <input type="text" name="cert-name" placeholder='Name' className='name' value={certName} onChange={(e) => setCertName(e.target.value)} />
-            <input type="text" name="cert-desc" placeholder='Description' className='price' value={certDescription} onChange={(e) => setCertDescription(e.target.value)} />
+            <TextField
+              id="filled-basic"
+              name="cert-name"
+              label="Name"
+              color="secondary"
+              value={certName}
+              onChange={(e) => setCertName(e.target.value)}
+              className='name' />
+            <TextField
+              id="outlined-multiline-flexible"
+              name="cert-desc"
+              label="Description"
+              color="secondary"
+              multiline
+              maxRows={5}
+              className='name'
+              value={certDescription}
+              onChange={(e) => setCertDescription(e.target.value)} />
           </div>
           {
             certPath == '' ?
@@ -180,8 +197,8 @@ function FirstPage({ onPageChange }) {
           }
           <input type="file" onChange={uploadCertPhoto} accept="image/*" style={{ display: 'none' }} ref={certInput} />
         </div>
+        <button className='save' onClick={save}>Save and continue</button>
       </div>
-      <button className='save' onClick={save}>Save and continue</button>
     </div>
   )
 }

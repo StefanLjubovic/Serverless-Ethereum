@@ -17,26 +17,30 @@
 }
 
 .user-pic-info-conatiner {
-    background: #8404fc;
-    background: -webkit-linear-gradient(to right, #8404fc, #dc10fc);
     background: linear-gradient(#8404fc, #dc10fc);
     height: 60%;
-    /* width: max-content; */
     width: 25%;
-    float: left;
     border-radius: 10px;
     font-family: "Montserrat", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .user-avatar {
-    top: 10%;
-    left: 30%;
+    margin-top: 7vh;
     background-color: white;
 }
 
 .name-surname {
     color: white;
     font-size: 23px;
+    margin-top: 50px;
+}
+
+.user-pic-info-conatiner p {
+    margin-top: -10px;
 }
 
 .user-info-container {

@@ -2,7 +2,6 @@ import React from 'react';
 import './UserProfile.css';
 import Avatar from '@mui/material/Avatar';
 import UserPic from "../../assets/business-man.png";
-import TextField from '@mui/material/TextField';
 
 function UserProfile() {
 
@@ -12,8 +11,8 @@ function UserProfile() {
                 {/* <h1 className='profile-title'>Hello, John!</h1> */}
                 <div className='user-pic-info-conatiner'>
                     <Avatar className='user-avatar' src={UserPic} sx={{ width: 130, height: 130 }} />
-                    <br></br><br></br> <br></br>
                     <h3 className='name-surname'>John Doe</h3>
+                    <p>@johndoe</p>
                 </div>
                 <div className='user-info-container'>
                     <div className='profile-title'>
