@@ -6,6 +6,7 @@ import UsersService from "../../../service/UsersService";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
 import Celebration from "../../../assets/celebration.avif"
+import Web3Service from "../../../service/Web3Service"
 function EnrolledLeft({ path ,video,course,triggerFunctionLeft}) {
   const MySwal = withReactContent(Swal)
   const handleVideoEnd = () => {
@@ -25,6 +26,7 @@ function EnrolledLeft({ path ,video,course,triggerFunctionLeft}) {
             color: "#716",
             background: `#fff url(${Celebration}) left top no-repeat`,
           });
+          Web3Service.minfNFT(resp1.data)
         })
       }
       triggerFunctionLeft(video.Name)
