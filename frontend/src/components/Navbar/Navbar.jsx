@@ -2,13 +2,18 @@ import './Navbar.css';
 import Logo from '../../assets/logo-simple.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ImageService from '../../service/ImageService';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function Navbar() {
     const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(true)
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const location = useLocation();
+
+    const checkPathname = () => {
+        return (location.pathname === '/profile') ? true : false;
+    }
 
     async function courseNavigate() {
         navigate('/course-create');
@@ -41,8 +46,8 @@ function Navbar() {
                     </div>
                 ) : (
                     <div className="btn-divv">
-                        <button className='login' onClick={courseNavigate}>Create course</button>
-                        <button onClick={openProfile}>My profile</button>
+                        {checkPathname() ? (<button className='login' onClick={courseNavigate}>Create course</button>) : null}
+                        {!checkPathname() ? (<button onClick={openProfile}>My profile</button>) : null}
                     </div>
                 )}
             </div>

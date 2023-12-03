@@ -90,6 +90,7 @@ button {
 
 .navigation .btn-div> :nth-child(1) {
     color: var(--white);
+    font-size: 13px;
     height: 4.5vh;
     width: 20vh;
 }
@@ -100,20 +101,13 @@ button {
     margin-top: 3px;
 }
 
-/* Create course button */
 .navigation .btn-divv> :nth-child(1) {
-    color: #8404fc;
-    background-color: transparent;
+    color: white;
+    font-size: 13px;
+    background-color: #8404fc;
     height: 2rem;
     height: 4.5vh;
-    width: 20vh;
-}
-
-/* My profile button */
-.navigation .btn-divv> :nth-child(2) {
-    color: var(--white);
-    height: 4.5vh;
-    width: 18vh;
+    width: 16vh;
 }
 
 .navigation .searchInput {

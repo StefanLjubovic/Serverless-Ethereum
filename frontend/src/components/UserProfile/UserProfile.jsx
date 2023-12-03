@@ -8,7 +8,6 @@ function UserProfile() {
     return (
         <div className='profile-container'>
             <div className='profile-child'>
-                {/* <h1 className='profile-title'>Hello, John!</h1> */}
                 <div className='user-pic-info-conatiner'>
                     <Avatar className='user-avatar' src={UserPic} sx={{ width: 130, height: 130 }} />
                     <h3 className='name-surname'>John Doe</h3>
