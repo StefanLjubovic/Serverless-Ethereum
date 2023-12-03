@@ -1,46 +1,54 @@
-.enrolled{
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+
+.enrolled {
     display: flex;
     flex-direction: column;
     width: 98.9vw;
+    font-family: "Montserrat", sans-serif;
 }
 
-.enrolled .header{
+.enrolled .header {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     background-color: var(--black);
     width: 100%;
-    height: 3.5rem;
+    height: 4rem;
     color: white;
     padding-left: 1rem;
     align-items: center;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     gap: 2rem;
 }
 
-.enrolled .icon{
-    margin-top: 0.3rem;
+.header .course-name {
+    font-size: 1.1rem;
+}
+
+.enrolled .icon {
+    margin-top: 0rem;
     margin-right: 1rem;
 }
 
-.enrolled .header > :nth-child(1){
+.enrolled .header> :nth-child(1) {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.enrolled .header > :nth-child(1):hover{
+.enrolled .header> :nth-child(1):hover {
     color: var(--gray);
     cursor: pointer;
 }
 
-.enrolled .separator{
+.enrolled .separator {
     color: var(--gray);
+    font-weight: 600;
 }
 
-.enrolled> :nth-child(2){
+.enrolled> :nth-child(2) {
     width: 100vw;
-    height: 85vh;
+    height: 90vh;
     display: flex;
     flex-direction: row;
 }

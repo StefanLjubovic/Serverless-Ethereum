@@ -1,7 +1,5 @@
-
-
-.dropdown .btn{
-    width: 90%;
+.dropdown .btn {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -11,38 +9,40 @@
     height: 3rem;
     border-bottom: 1px solid var(--gray);
     padding-right: 1rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 550;
     cursor: pointer;
+    color: rgb(60, 7, 112);
 }
 
-.dropdown .btn:hover{
-    background-color: #7b7e7e;
+.dropdown .btn:hover {
+    background-color: #e8d4f3;
 }
 
-.dropdown .dropdown-item{
+.dropdown .dropdown-item {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
     gap: 1rem;
-    width: 90%;
-    font-size: 0.8rem;
-    height: 3rem;
+    width: 100%;
+    font-size: 0.9rem;
+    height: 3.5rem;
     padding-left: 1rem;
 }
 
-.dropdown .dropdown-item:hover{
-    background-color: rgb(0, 0, 0,0.1);
+.dropdown .dropdown-item:hover {
+    background-color: rgb(0, 0, 0, 0.1);
     cursor: pointer;
 }
 
-.dropdown .title{
+.dropdown .title {
     text-align: left;
-    margin-top: -0rem;
-    font-size: 0.7rem;
+    margin-top: 0.5rem;
+    font-size: 1rem;
 }
 
-.dropdown .desc{
+.dropdown .desc {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -50,8 +50,8 @@
     color: var(--black);
 }
 
-.dropdown .dur{
-    margin-top: -1rem;
-    font-size: 0.6rem;
+.dropdown .dur {
+    margin-top: -0.8rem;
+    font-size: 0.8rem;
     color: #7b7e7e;
 }

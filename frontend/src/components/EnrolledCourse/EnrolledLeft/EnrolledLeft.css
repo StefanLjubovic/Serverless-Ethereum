@@ -1,4 +1,9 @@
-.e-left{
+.e-left {
     width: 75%;
     height: 100%;
+}
+
+.e-left .course-desc {
+    margin-top: 1rem;
+    margin-left: -55rem;
 }
