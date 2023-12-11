@@ -1,34 +1,41 @@
-
-.left{
-    margin-top: 1rem;
+.left {
+    margin-top: 3rem;
     min-width: 25rem;
     max-width: 35rem;
     height: 70vh;
 }
 
-.left .title{
+.left .title {
     display: flex;
     flex-wrap: wrap;
     color: white;
     text-align: left;
-    max-width:80%;
+    max-width: 80%;
 }
 
-.left .description{
+.left .description {
     display: flex;
     flex-wrap: wrap;
     color: white;
     text-align: left;
-    max-width:80%;
+    max-width: 80%;
     margin-top: -1rem;
     font-size: 0.9rem;
 }
 
-.left .rating{
+.left .rating {
     display: flex;
     flex-wrap: wrap;
     color: white;
     text-align: left;
-    max-width:80%;
+    max-width: 80%;
     margin-top: 1rem;
+}
+
+.left-description {
+    display: flex;
+    margin-top: -70%;
+    /* box-shadow: 4px 4px 6px rgba(0, 0, 0.3, 0.3); */
+    text-align: left;
+    text-justify: inter-word;
 }

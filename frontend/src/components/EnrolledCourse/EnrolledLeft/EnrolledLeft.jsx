@@ -50,7 +50,7 @@ function EnrolledLeft({ path, video, course, triggerFunctionLeft }) {
           </Video>
         )}
       </div>
-      <p className="course-desc">{course.Description}</p>
+      {/* <p className="course-desc">{course.Description}</p> */}
     </div>
   );
 }

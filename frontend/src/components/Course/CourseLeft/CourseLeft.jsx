@@ -1,18 +1,21 @@
 import "./CourseLeft.css"
 
+function CourseLeft({ id, course }) {
 
-function CourseLeft({id,course}){
-
-
-    return(
+    return (
         <div>
-        { course != null &&
-        <div className="left">
-            <h1 className="title">{course.Name}</h1>
-            <p className="description">{course.Description}</p>
-            <p className="rating">Rating 4.6⭐</p>
-        </div>
-        }
+            {course != null &&
+                <div className="left">
+                    <h1 className="title">{course.Name}</h1>
+                    {/* <p className="description">{course.Description}</p> */}
+                    <p className="rating">Rating 4.6 ⭐</p>
+                </div>
+            }
+            {course != null &&
+                <div className="left-description">
+                    <p className="description">{course.Description}</p>
+                </div>
+            }
         </div>
     );
 }

@@ -1,76 +1,80 @@
-.right{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    min-width: 18rem;
-    margin-top: 1rem;
-    height: 70vh;
-    border: 0.5px solid var(--white);
-    box-shadow: 4px 4px 6px rgba(0, 0, 0.3, 0.3);
-    position: relative;
-    background-color: white;
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 18rem;
+  margin-top: 3rem;
+  height: 70vh;
+  border: 0.5px solid var(--white);
+  box-shadow: 4px 4px 6px rgba(0, 0, 0.3, 0.3);
+  position: relative;
+  background-color: white;
+  border-radius: 10px;
 }
 
-.right > :nth-child(1){
-    width: 100%;
+.right> :nth-child(1) {
+  width: 100%;
 }
 
-.right > :nth-child(2){
+.right> :nth-child(2) {
   width: 100%;
   padding: 2rem;
 }
 
-.right  .course-img{
-    width: 100%;
-    height: 10rem;
-    position: relative;
-  }
+.right .course-img {
+  width: 100%;
+  height: 10rem;
+  position: relative;
+  border-radius: 20px;
+}
 
-  .right .icon{
-    position: absolute;
-    color: white;
-    z-index: 50;
-    left: 7.5rem;
-    top: 4rem;
-    width: 2.5rem;
-    height: 2.5rem;
-  }
+.right .icon {
+  position: absolute;
+  color: white;
+  z-index: 50;
+  left: 7.5rem;
+  top: 4rem;
+  width: 2.5rem;
+  height: 2.5rem;
+}
 
-  .right .price{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    gap:0.4rem;
-    margin-top: -1rem;
-  }
+.right .price {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: -1rem;
+}
 
-  .right .eth{
-    font-size: 2rem;
-  }
+.right .eth {
+  font-size: 2rem;
+}
 
-  .right .eth-price{
-    font-size: 2rem;
-  }
-  .right .dollar-price{
-    color:var(--gray);
-    margin-top:1.5rem;  
-  }
-  .right .content{
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+.right .eth-price {
+  font-size: 2rem;
+}
 
-  .right .buy-btn{
-    width: 100%;
-    color: white;
-    background-color: var(--pink);
-    border: none;
-    height: 2.5rem;
-    margin-top: -1rem;
-  }
+.right .dollar-price {
+  color: var(--gray);
+  margin-top: 1.5rem;
+}
 
-  .right .buy-btn:hover{
-    background-color: var(--pink-dark);
-    cursor: pointer;
-  }
+.right .content {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.right .buy-btn {
+  width: 100%;
+  color: white;
+  background-color: var(--pink);
+  border: none;
+  height: 2.5rem;
+  margin-top: -1rem;
+}
+
+.right .buy-btn:hover {
+  background-color: var(--pink-dark);
+  cursor: pointer;
+}
