@@ -1,17 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './UserProfile.css';
 import Avatar from '@mui/material/Avatar';
 import UserPic from "../../assets/business-man.png";
+import UsersService from '../../service/UsersService';
 
 function UserProfile() {
+    const [state, setState] = React.useState({
+        name: "",
+        surname: "",
+        email: "",
+        username: "",
+    })
+
+    const [user, setUser] = useState(state);
+
+    useEffect(() => {
+        UsersService.GetByUsername().then(response => {
+            console.log(response.data);
+            if (response.data == null) {
+                setUser(null);
+            } else {
+                setUser(response.data);
+            }
+        })
+    }, [])
 
     return (
         <div className='profile-container'>
             <div className='profile-child'>
                 <div className='user-pic-info-conatiner'>
                     <Avatar className='user-avatar' src={UserPic} sx={{ width: 130, height: 130 }} />
-                    <h3 className='name-surname'>John Doe</h3>
-                    <p>@johndoe</p>
+                    <h3 className='name-surname'>{user.Name} {user.Surname}</h3>
+                    <p>@{user.Email}</p>
                 </div>
                 <div className='user-info-container'>
                     <div className='profile-title'>
@@ -23,7 +43,7 @@ function UserProfile() {
                             <p>Name</p>
                         </div>
                         <div className='name'>
-                            <p>John Doe</p>
+                            <p>{user.Name} {user.Surname}</p>
                         </div>
                     </div>
                     <div className='user-info'>
@@ -31,7 +51,12 @@ function UserProfile() {
                             <p>Email</p>
                         </div>
                         <div className='name'>
-                            <p>john@gmail.com</p>
+                            <p>{user.Email}</p>
+                        </div>
+                    </div>
+                    <div className='user-info'>
+                        <div className='name-info'>
+                            <p>Certificates</p>
                         </div>
                     </div>
                 </div>
