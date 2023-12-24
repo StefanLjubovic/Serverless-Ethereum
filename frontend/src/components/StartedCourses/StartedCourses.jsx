@@ -9,7 +9,7 @@ function StartedCourses() {
 
     useEffect(() => {
         UsersService.GetUserCourses().then(resp => {
-            console.log(resp.data)
+            console.log("User courses:" + resp.data)
         })
     }, [])
 
