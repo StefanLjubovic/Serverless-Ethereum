@@ -1,11 +1,14 @@
 import React from "react";
 import Logo from "../../assets/logo-simple.png";
+import RegistrationService from "../../service/RegistrationService";
 
 function SignUpForm() {
   const [state, setState] = React.useState({
     name: "",
+    surname: "",
     email: "",
-    password: ""
+    password: "",
+    username: "",
   });
   const handleChange = evt => {
     const value = evt.target.value;
@@ -18,7 +21,7 @@ function SignUpForm() {
   const handleOnSubmit = evt => {
     evt.preventDefault();
 
-    const { name, email, password } = state;
+    const { name, surname, email, password, username } = state;
     alert(
       `You are sign up with name: ${name} email: ${email} and password: ${password}`
     );
@@ -29,6 +32,8 @@ function SignUpForm() {
         [key]: ""
       });
     }
+
+    RegistrationService.SignUp(state);
   };
 
   return (
@@ -46,11 +51,25 @@ function SignUpForm() {
           placeholder="Name"
         />
         <input
+          type="text"
+          name="surname"
+          value={state.surname}
+          onChange={handleChange}
+          placeholder="Surname"
+        />
+        <input
           type="email"
           name="email"
           value={state.email}
           onChange={handleChange}
           placeholder="Email"
+        />
+        <input
+          type="text"
+          name="username"
+          value={state.username}
+          onChange={handleChange}
+          placeholder="Username"
         />
         <input
           type="password"

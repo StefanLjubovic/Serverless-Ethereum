@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 function Navbar() {
     const navigate = useNavigate();
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const location = useLocation();
 
     const checkPathname = () => {

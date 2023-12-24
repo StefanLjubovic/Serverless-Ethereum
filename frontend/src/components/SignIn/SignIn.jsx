@@ -1,9 +1,11 @@
 import React from "react";
 import Logo from "../../assets/logo-simple.png";
+import RegistrationService from "../../service/RegistrationService";
+import { S } from "react-html5video";
 
 function SignInForm() {
   const [state, setState] = React.useState({
-    email: "",
+    username: "",
     password: ""
   });
   const handleChange = evt => {
@@ -17,8 +19,8 @@ function SignInForm() {
   const handleOnSubmit = evt => {
     evt.preventDefault();
 
-    const { email, password } = state;
-    alert(`You are login with email: ${email} and password: ${password}`);
+    const { username, password } = state;
+    alert(`You are login with email: ${username} and password: ${password}`);
 
     for (const key in state) {
       setState({
@@ -26,19 +28,26 @@ function SignInForm() {
         [key]: ""
       });
     }
+
+    signIn(state);
   };
+
+  async function signIn(signInDto) {
+    const response = await RegistrationService.SignIn(signInDto);
+    console.log(response.data.token);
+  }
 
   return (
     <div className="form-container sign-in-container">
-      <img src={Logo} className="logo-sign-in"/>
+      <img src={Logo} className="logo-sign-in" />
       <form onSubmit={handleOnSubmit}>
         <h1>Sign in</h1>
         <br />
         <input
-          type="email"
-          placeholder="Email"
-          name="email"
-          value={state.email}
+          type="text"
+          placeholder="Username"
+          name="username"
+          value={state.username}
           onChange={handleChange}
         />
         <input
