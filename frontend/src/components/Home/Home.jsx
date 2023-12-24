@@ -6,14 +6,21 @@ import { useEffect, useState } from "react";
 
 function Home() {
     const [isLoggedIn, setIsLoggedIn] = useState(true);
-
     useEffect(() => {
         Web3Service.retrieveNFTsByAccount().then(resp => {
             {
                 console.log(resp)
             }
         })
-    }, [])
+
+        let token = localStorage.getItem('jwtToken');
+        if (token != null) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+
+    }, [], isLoggedIn);
 
     return (
         <div className="home">

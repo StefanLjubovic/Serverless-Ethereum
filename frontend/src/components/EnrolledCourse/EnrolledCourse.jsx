@@ -9,15 +9,16 @@ import CourseService from "../../service/CourseService"
 import { useState } from "react";
 import ImageService from "../../service/ImageService";
 import UsersService from "../../service/UsersService";
-function EnrolledCourse() {
 
-    const [path, setPath] = useState("")
-    const [course, setCourse] = useState(null)
+function EnrolledCourse() {
+    const [path, setPath] = useState("");
+    const [course, setCourse] = useState(null);
     const { id } = useParams();
-    const [user, setUser] = useState(null)
-    const [video, setVideo] = useState(null)
-    const [courseMap, setCourseMap] = useState(new Set())
-    const navigate = useNavigate()
+    const [user, setUser] = useState(null);
+    const [video, setVideo] = useState(null);
+    const [courseMap, setCourseMap] = useState(new Set());
+    const navigate = useNavigate();
+
     useEffect(() => {
         CourseService.GetById(id).then(resp => {
             console.log(resp.data)
@@ -27,7 +28,8 @@ function EnrolledCourse() {
             console.log(resp1)
             setUser(resp1.data)
         })
-    }, [])
+    }, []);
+
     useEffect(() => {
         if (user == undefined || course == undefined) return
         console.log(user.UsersCourses)
@@ -37,7 +39,7 @@ function EnrolledCourse() {
                 return
             }
         });
-    }, [user])
+    }, [user]);
 
     async function externalFunction(video) {
         console.log(video.Path)

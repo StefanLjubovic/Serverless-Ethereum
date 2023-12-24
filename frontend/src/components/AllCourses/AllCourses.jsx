@@ -6,10 +6,11 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Web3Service from "../../service/Web3Service";
 import { useNavigate } from "react-router-dom";
-function AllCourses() {
 
+function AllCourses() {
     const [courses, setCourses] = useState([])
     const navigate = useNavigate();
+
     useEffect(() => {
         CourseService.GetAllCourses().then(resp => {
             console.log(resp.data)

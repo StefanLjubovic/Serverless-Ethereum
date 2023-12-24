@@ -23,7 +23,7 @@ function SignUpForm() {
 
     const { name, surname, email, password, username } = state;
     alert(
-      `You are sign up with name: ${name} email: ${email} and password: ${password}`
+      `You are sign up with name: ${name} email: ${email}`
     );
 
     for (const key in state) {

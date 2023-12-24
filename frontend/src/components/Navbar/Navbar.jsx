@@ -11,6 +11,15 @@ function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const location = useLocation();
 
+    useEffect(() => {
+        let token = localStorage.getItem('jwtToken');
+        if (token != null) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, [isLoggedIn]);
+
     const checkPathname = () => {
         return (location.pathname === '/profile') ? true : false;
     }

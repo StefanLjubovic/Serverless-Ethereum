@@ -1,9 +1,10 @@
 import React from "react";
 import Logo from "../../assets/logo-simple.png";
 import RegistrationService from "../../service/RegistrationService";
-import { S } from "react-html5video";
+import { useNavigate } from 'react-router-dom';
 
 function SignInForm() {
+  const navigate = useNavigate();
   const [state, setState] = React.useState({
     username: "",
     password: ""
@@ -20,7 +21,7 @@ function SignInForm() {
     evt.preventDefault();
 
     const { username, password } = state;
-    alert(`You are login with email: ${username} and password: ${password}`);
+    alert(`You are login with email: ${username}`);
 
     for (const key in state) {
       setState({
@@ -30,11 +31,13 @@ function SignInForm() {
     }
 
     signIn(state);
+    navigate("/");
   };
 
   async function signIn(signInDto) {
     const response = await RegistrationService.SignIn(signInDto);
     console.log(response.data.token);
+    localStorage.setItem('jwtToken', response.data.token);
   }
 
   return (
