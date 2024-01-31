@@ -58,6 +58,9 @@ function UserProfile() {
                         <div className='name-info'>
                             <p>Certificates</p>
                         </div>
+                        <div className='name'>
+                            <p><a className='nft-link' href='https://opensea.io/'>See here</a></p>
+                        </div>
                     </div>
                 </div>
             </div>

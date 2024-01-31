@@ -88,7 +88,7 @@ h6 {
   overflow: hidden;
   font-weight: 500;
   overflow-x: hidden;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   padding-top: 10px !important;
   color: rgb(60, 7, 112);
 
@@ -99,6 +99,7 @@ h6 {
   padding-top: 10px !important;
   color: var(--gray);
   max-width: 100%;
+  text-overflow: ellipsis;
 }
 
 .courses-page .duration {

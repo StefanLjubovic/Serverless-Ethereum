@@ -4,6 +4,8 @@
 }
 
 .e-left .course-desc {
-    margin-top: 1rem;
-    margin-left: -55rem;
+    margin-top: 1.5rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    text-align: justify;
 }

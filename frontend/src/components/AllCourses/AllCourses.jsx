@@ -46,7 +46,7 @@ function AllCourses() {
                         </div>
                         <div>
                             <p className="title">{item.Name}</p>
-                            <h6 className="description">{item.Description}</h6>
+                            {/* <h6 className="description">{item.Description}</h6> */}
                             <p className="duration">Lecture 7m</p>
                         </div>
                     </div>
